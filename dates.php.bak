@@ -1,0 +1,50 @@
+<?php
+
+$todayYear = date('Y');
+$todayMonth = date('m');
+
+$date = '2022-08-14 10:40:00';
+$date = explode(' ', $date);
+$millesime = explode('-', $date[0]);
+$heure = explode(':', $date[1]);
+
+
+$time = mktime($heure[0], $heure[1], $heure[2], $millesime[1], $millesime[2], $millesime[0]);
+
+$fmt = datefmt_create(
+    'fr_FR',
+    IntlDateFormatter::FULL,
+    IntlDateFormatter::FULL,
+    'Europe/Brussels',
+    IntlDateFormatter::GREGORIAN,
+    'EEEE dd/MM'
+);
+
+
+
+// $leMois = '2021-08';
+$leMois = sprintf('%s-%s', $todayYear, $todayMonth);
+
+// premier jour de la semaine
+$firstDayOfWeek = date('w', strtotime($leMois));
+// 1 = lundi; 2 = mardi; 3 = mercredi...
+echo 'Le premier jour de la semaine du '.$date.' est un '.$firstDayOfWeek;
+
+$date = explode(' ', $leMois)[0];
+$month = explode('-', $leMois)[1];
+$year = explode('-', $leMois)[0];
+
+$nbJours = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+echo "Nombre de jours durant le mois $month = $nbJours";
+
+$list=array();
+
+for($d=1; $d<=31; $d++)
+{
+    $time=mktime(12, 0, 0, $month, $d, $year);          
+    if (date('m', $time)==$month)       
+        $list[]=ucfirst(datefmt_format($fmt, $time));
+}
+echo "<pre>";
+print_r($list);
+echo "</pre>";

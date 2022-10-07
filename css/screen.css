@@ -1,0 +1,199 @@
+body {
+    margin: auto;
+    padding: 0 0 2em;
+    font-family: Verdana, Arial, sans-serif;
+    font-size: 10pt;
+    background-image: url('../css/oxfambg.png') !important;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-attachment: fixed;
+    background-position: center; 
+}
+
+#texte {
+    width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    float: left;
+    font-size: 11pt;
+    min-height: 400px;
+}
+
+h1 {
+    border-bottom: 1px dashed green;
+    font-size: 24pt !important;
+    font-weight: bold;
+    color: #080 !important;
+    text-align: center;
+}
+
+h2 {
+    font-size: x-large;
+    font-weight: bold;
+    margin-left: 5px;
+    margin-bottom: 5px;
+    color: #080 !important;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.39);
+}
+
+
+a {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}
+
+fieldset {
+    border: 0;
+    border-radius: 10px;
+}
+
+form {
+    border: 1px dashed green;
+    padding: 15px;
+}
+
+.microForm {
+    margin: 0;
+    padding: 0;
+}
+
+input[type='text'], input[type='passwd'], select, textarea {
+    background: #eeeeee repeat scroll 0% 50%;
+    color: #111111;
+}
+
+.bouton {
+    cursor: pointer;
+}
+
+#footer {
+    margin: 0 auto;
+    padding: 0 2em;
+    width: 1000px;
+    font-size: 10px;
+    font-weight: normal;
+    bottom: 0;
+    position: fixed;
+    background-color: #ffe37f;
+}
+
+
+#pied {
+    font-size: 0.7em;
+}
+
+.liste ul {
+    list-style-type: none;
+    padding-left: 1em;
+}
+
+.liste li {
+    padding-bottom: 1em;
+    margin-left: 0em;
+}
+
+.micro {
+    font-size: 0.8em;
+}
+
+.nano {
+    font-size: 0.6em;
+}
+
+#lepied {
+    border-top: 1px solid #ff0000;
+    clear: both;
+    padding-top: 1em;
+}
+
+.hover {
+    opacity: 0.8;
+}
+
+#menu {
+    margin: 5em auto;
+    width: 640px;
+}
+
+.btn-primary {
+    background-color: #008000 !important;
+}
+
+.modal-title {
+    display: inline !important;
+}
+
+.trGreen {
+    background-color: #99ff99;
+}
+
+#calendar-table td {
+    border: 1px solid #00ff00;
+}
+
+.listeBenevoles div {
+    background: #008000;
+    margin: 2px;
+    padding: 1px;
+    text-align:center;
+    color: #ffffff
+}
+
+.me {
+    background-color: red !important;
+}
+
+.unSelect {
+    background-color: #ffaaaa !important;
+}
+
+td.candidat {
+    background-color: #ccf;
+}
+
+td.case {
+    cursor: pointer;
+}
+
+#calendar-table td.conge {
+    background-color: #faa;
+    opacity: 0.6;
+    cursor: default;
+}
+
+
+#encadre {
+    margin: 0 !important;
+    border: 1px solid #aaa;
+    background: #008800;
+    color: #fff !important;
+}
+
+
+@keyframes fa-blink {
+    0% { opacity: 1; }
+    25% { opacity: 0.25; }
+    50% { opacity: 0.5; }
+    75% { opacity: 0.75; }
+    100% { opacity: 0; }
+}
+.fa-blink {
+  -webkit-animation: fa-blink .75s linear infinite;
+  -moz-animation: fa-blink .75s linear infinite;
+  -ms-animation: fa-blink .75s linear infinite;
+  -o-animation: fa-blink .75s linear infinite;
+  animation: fa-blink .75s linear infinite;
+}
+
+a.selected {
+    background-color: red !important;
+}
+
+.badge.badge-success {
+    background: #008800;
+}
