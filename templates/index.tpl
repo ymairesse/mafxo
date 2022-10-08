@@ -47,9 +47,8 @@
 
 		$('body').on('click', '#reset', function(){
 			$('#formInscription')[0].reset();
-			$('.case').removeClass('candidat');
-			$('.case').removeClass('notCandidat')
 			$('.me').removeClass('unSelect');	
+			$('button.candidat').remove();
 		})
 
 		$('body').on('click', '#btn-save', function() {
@@ -239,7 +238,7 @@
 				var ch = $(this).is(':checked') ? 1 : 0;
 				modeleJour[i] = ch;
 				})
-console.log(modeleJour);
+
 			bootbox.confirm({
 				title: title,
 				message: 'Veuillez confirmer la recopie de <strong>vos inscriptions</strong> sur chaque <strong>' + jourFR + '</strong> du mois',
@@ -312,12 +311,14 @@ console.log(modeleJour);
 			var checkbox = $('input:checkbox.inscription[data-periode="' + periode + '"][data-date="' + date + '"]');
 			// cocher ou décocher la case
 			checkbox.trigger('click');
+			// sélectionner la case
 			var ceci = $(this).closest('td');
 
 			var isChecked = checkbox.prop('checked');
 			if (isChecked == true) {
 				// si un bouton .me existe, il repasse à la couleur rouge
-				ceci.find('.listeBenevoles button.me').removeClass('btn-lightRed').addClass('btn-danger');
+				ceci.find('.listeBenevoles button.me').removeClass('btn-pink').addClass('btn-danger');
+				ceci.find('.listeBenevoles button.me').find('.disk').addClass('hidden')
 				// s'il existe déjà un bouton ".me", on ne rajoute plus rien, sinon ajouter le bouton .candidat
 				if (ceci.find('.listeBenevoles button.me').length == 0)
 					$.post('inc/btn-candidat.inc.php', {
@@ -326,6 +327,7 @@ console.log(modeleJour);
 					}, function(resultat){
 						// ajouter le bouton pour le candidat bénévole à la période
 						$('td[data-date="' + date + '"][data-periode="' + periode + '"]').find('.listeBenevoles').append(resultat);
+						ceci.find('.listeBenevoles button').find('.disk').removeClass('hidden');
 					})
 			}
 			else {
@@ -336,7 +338,8 @@ console.log(modeleJour);
 					// suppression d'une inscription pas encore enregistrée
 					$('td[data-date="' + date + '"][data-periode="' + periode + '"] button.candidat[data-acronyme="' + acronyme + '"]').remove();
 					// mise au rebut d'une inscription enregistrée
-					ceci.find('.listeBenevoles button.me').removeClass('btn-danger').addClass('btn-lightRed');
+					ceci.find('.listeBenevoles button.me').removeClass('btn-danger').addClass('btn-pink');
+					ceci.find('.listeBenevoles button.me').find('.disk').removeClass('hidden');
 				})
 			}
 		})
@@ -389,9 +392,9 @@ console.log(modeleJour);
 				)
 			})
 
-	    $('[data-toggle="popover"]').popover();
+// 	    $('[data-toggle="popover"]').popover();
 
-        $('[data-toggle="tooltip"]').tooltip();
+//         $('[data-toggle="tooltip"]').tooltip();
 
 	})
 </script>

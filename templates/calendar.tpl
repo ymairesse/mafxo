@@ -58,7 +58,7 @@
             data-dayOfMonth="{$dataJournee.day.dayOfMonth}"
             data-date="{$laDate}">
 
-            <td>
+            <td style="padding:0">
 
                 <div class="btn-group-vertical btn-block">
 
@@ -137,8 +137,8 @@
                                 data-container="body"
                                 data-acronyme="{$acronyme}"
                                 data-placement="top">
-                                <span class="visible-xs hidden-md hidden-lg">{$unAcronyme}</span>
-                                <span class="visible-sm visible-md visible-lg">{$benevole.prenom} {$benevole.nom}</span>
+                                <span class="visible-xs hidden-md hidden-lg">{$unAcronyme} <span class="disk hidden">(<i class="fa fa-floppy-o"></i>)</span></span>
+                                <span class="visible-sm visible-md visible-lg">{$benevole.prenom} {$benevole.nom} <span class="disk hidden">(<i class="fa fa-floppy-o"></i>)</span></span>
                             </button>
                         {/foreach}
                     </div>
@@ -162,10 +162,24 @@
 
     $(document).ready(function(){
     
-	    $('[data-toggle="popover"]').popover();
+//	    $('[data-toggle="popover"]').popover();
+
+    $('[data-toggle="popover"]').on('click',function(e){
+        e.preventDefault();
+    }).popover();
 
         $('[data-toggle="tooltip"]').tooltip();
     
     })
+
+    $('body').on('click', function (e) {
+        $('[data-toggle="popover"]').each(function () {
+            //the 'is' for buttons that trigger popups
+            //the 'has' for icons within a button that triggers a popup
+            if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                $(this).popover('hide');
+            }
+        });
+    });
 
 </script>
