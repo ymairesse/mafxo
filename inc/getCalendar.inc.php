@@ -91,6 +91,9 @@ $smarty->assign('usersList', $usersList);
 $acronyme = $User->getAcronyme();
 $smarty->assign('acronyme', $acronyme);
 
+$identite = $User->getIdentiteUser($acronyme);
+$smarty->assign('identite', $identite);
+
 $monthName = $Application->monthName($month);
 $smarty->assign('monthName', $monthName);
 

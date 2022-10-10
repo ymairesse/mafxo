@@ -124,6 +124,10 @@ input[type='text'], input[type='passwd'], select, textarea {
     background-color: #008000 !important;
 }
 
+.panel-primary {
+    background-color: #008000 !important;
+}
+
 .modal-title {
     display: inline !important;
 }

@@ -7,12 +7,16 @@
     <h3>Fermetures hebodomadaires</h3>
 
     <table class="table table-condensed">
+        <thead>
         <tr>
             <th style="width:10%">Jour</th>
             {foreach from = $listePeriodes key=noPeriode item=permanence}
                 <th style="width:30%">{$permanence.debut} - {$permanence.fin}</th>
             {/foreach}
         </tr>
+        </thead>
+
+        <tbody>
         {foreach from = $daysOfWeek key=noJour item=jourFR}
             <tr data-jour="{$jourFR}">
                 <th>{$jourFR}</th>
@@ -34,7 +38,7 @@
             {/foreach}
             <tr>
         {/foreach}
-
+        </tbody>
     </table>
 
 </div>
@@ -49,6 +53,7 @@
     <div id="tableauFeries">
 
         {include file='inc/tableauFeries.tpl'}
+
     </div>
 
 </div>
@@ -57,25 +62,26 @@
 
 </form>
 
+
 <script>
 
     $(document).ready(function(){
 
-
-        $('.datepicker').datepicker( {
-            format: 'dd/mm/yyyy',
-            clearBtn: true,
-            language: 'fr',
-            calendarWeeks: true,
-            autoclose: true,
-            todayHighlight: true,
-            changeMonth: false,
-            startDate: new Date({$year},{$month-1},1),
-            endDate: new Date({$year}, {$month}, 0),
-            clearBtn: false
-
+        $('body').on('focus','.datepicker', function(){
+            $(this).datepicker({
+                format: 'dd/mm/yyyy',
+                clearBtn: true,
+                language: 'fr',
+                calendarWeeks: true,
+                autoclose: true,
+                todayHighlight: true,
+                changeMonth: false,
+                startDate: new Date({$year},{$month-1},1),
+                endDate: new Date({$year}, {$month}, 0),
+                clearBtn: false,
+                showTodayButton: true
+            });
         });
-
     
     })
 

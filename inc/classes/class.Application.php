@@ -791,7 +791,9 @@ class Application {
      */
     public function dateMySQL($dateFr){
         $dateFr = explode ('/', $dateFr);
-        return sprintf('%s-%s-%s', $dateFr[2], $dateFr[1], $dateFr[0]);
+        if (count($dateFr) == 3)
+            return sprintf('%s-%s-%s', $dateFr[2], $dateFr[1], $dateFr[0]);
+            else return Null;
     }
 
    /**

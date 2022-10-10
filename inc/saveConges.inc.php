@@ -42,7 +42,8 @@ foreach ($form as $field => $value) {
     if (SUBSTR($field, 0, 4) == 'date') {
         $jour = explode('_', $field)[1];
         $value = $Application->dateMySQL($value);
-        $listeFeries[$jour] = array('date' => $value, 'periodes' => array());
+        if ($value != Null)
+            $listeFeries[$jour] = array('date' => $value, 'periodes' => array());
     }
     if (SUBSTR($field, 0, 5) == 'check'){
         $ex = explode('_', $field);
@@ -51,12 +52,15 @@ foreach ($form as $field => $value) {
         $listeFeries[$jour]['periodes'][] = $periode;
     }
 }
+
 // enregistrement dans la BD
 foreach ($listeFeries as $wtf => $unJour){
-    $uneDate = $unJour['date'];
-    $lesPeriodes = $unJour['periodes'];
-    foreach ($lesPeriodes as $wtf => $unePeriode) {
-        $nb += $Application->saveJourFerie($uneDate, $unePeriode);
+    if (isset($unJour['date'])) {
+        $uneDate = $unJour['date'];
+        $lesPeriodes = $unJour['periodes'];
+        foreach ($lesPeriodes as $wtf => $unePeriode) {
+            $nb += $Application->saveJourFerie($uneDate, $unePeriode);
+        }
     }
 }
 

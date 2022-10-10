@@ -109,59 +109,59 @@ $('body').on('click', '#btn-saveCalendar', function(){
     })
 
 $('body').on('click', '.btn-sameAsDay', function(){
-    var title = 'Report de vos inscriptions';
-    var message = '<br><strong style="color:red">N\'OUBLIEZ PAS D\'ENREGISTRER</strong>';
-    var jour = $(this).data('dayofweek');
-    var jourFR = $(this).data('jourfr');
-    var date = $(this).closest('tr').data('date');
-    var listeCheckBoxes = $('input:checkbox[data-date="' + date + '"]');
-    var modeleJour = {};
-    listeCheckBoxes.each(function(i){
-        var ch = $(this).is(':checked') ? 1 : 0;
-        modeleJour[i] = ch;
-        })
+        var title = 'Report de vos inscriptions';
+        var message = '<br><strong style="color:red">N\'OUBLIEZ PAS D\'ENREGISTRER</strong>';
+        var jour = $(this).data('dayofweek');
+        var jourFR = $(this).data('jourfr');
+        var date = $(this).closest('tr').data('date');
+        var listeCheckBoxes = $('input:checkbox[data-date="' + date + '"]');
+        var modeleJour = {};
+        listeCheckBoxes.each(function(i){
+            var ch = $(this).is(':checked') ? 1 : 0;
+            modeleJour[i] = ch;
+            })
 
-    bootbox.confirm({
-        title: title,
-        message: 'Veuillez confirmer la recopie de <strong>vos inscriptions</strong> sur chaque <strong>' + jourFR + '</strong> du mois',
-        callback: function(result){
-            if (result == true) {
-                // vérifier que la session est encore active
-                $.post('inc/testSession.inc.php', {},
-                    function(resultat){
-                    if (resultat == '') {
-                        alert('Votre session est s\'est achevée. Veuillez vous reconnecter.');
-                        window.location.replace('accueil.php');
-                        }
+        bootbox.confirm({
+            title: title,
+            message: 'Veuillez confirmer la recopie de <strong>vos inscriptions</strong> sur chaque <strong>' + jourFR + '</strong> du mois',
+            callback: function(result){
+                if (result == true) {
+                    // vérifier que la session est encore active
+                    $.post('inc/testSession.inc.php', {},
+                        function(resultat){
+                        if (resultat == '') {
+                            alert('Votre session est s\'est achevée. Veuillez vous reconnecter.');
+                            window.location.replace('accueil.php');
+                            }
+                        })
+
+                    var bouton = $('#bouton').html();
+
+                    var n = 0;
+                    // recopier le modèle de journée dans les jours semaine suivants
+                    $('input:checkbox[data-dayofweek="' + jour + '"]').each(function(i){
+                        // à quelle période de la journée sommes-nous?
+                        var periode = $(this).data('periode');
+                        // parmi les checkboxes du même jour que l'originale,
+                        // attribuer la valeur trouvée dans le modèle pour cette période si pas déjà checked
+                        if (($(this).prop('checked') == false) && (modeleJour[periode] == 1)) {
+                            $(this).prop('checked', true);
+                            // ajouter le bouton à la fin de la liste des bénévoles
+                            $(this).closest('td').find('.listeBenevoles').append(bouton);
+                            
+                            $(this).closest('td').find('.btn-inscription .visible').toggle()
+
+                            // $(this).closest('td').find('.listeBenevoles button').find('.disk').last().prop('hidden', false);
+                            n++;
+                            }
                     })
 
-                var bouton = $('#bouton').html();
-
-                var n = 0;
-                // recopier le modèle de journée dans les jours semaine suivants
-                $('input:checkbox[data-dayofweek="' + jour + '"]').each(function(i){
-                    // à quelle période de la journée sommes-nous?
-                    var periode = $(this).data('periode');
-                    // parmi les checkboxes du même jour que l'originale,
-                    // attribuer la valeur trouvée dans le modèle pour cette période si pas déjà checked
-                    if (($(this).prop('checked') == false) && (modeleJour[periode] == 1)) {
-                        $(this).prop('checked', true);
-                        // ajouter le bouton à la fin de la liste des bénévoles
-                        $(this).closest('td').find('.listeBenevoles').append(bouton);
-                        
-                        $(this).closest('td').find('.btn-inscription .visible').toggle()
-
-                        // $(this).closest('td').find('.listeBenevoles button').find('.disk').last().prop('hidden', false);
-                        n++;
-                        }
-                })
-
-                bootbox.alert({
-                    title: title,
-                    message: '<strong>' + n + '</strong> recopie(s) sur chaque <strong>' + jourFR + '</strong>' + message
-                    })
+                    bootbox.alert({
+                        title: title,
+                        message: '<strong>' + n + '</strong> recopie(s) sur chaque <strong>' + jourFR + '</strong>' + message
+                        })
+                }
             }
-        }
-    })
+        })
 })
 

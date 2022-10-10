@@ -19,10 +19,6 @@ if ($User == null) {
 	exit;
 }
 
-$usersList = $Application->getUsersList();
-
-
-
 
 require_once INSTALL_DIR."/smarty/Smarty.class.php";
 $smarty = new Smarty();
@@ -111,8 +107,6 @@ $smarty->assign('listePeriodes', $listePeriodes);
 $smarty->assign('daysOfWeek', $daysOfWeek);
 
 $smarty->assign('inscriptions', $inscriptions);
-
-$smarty->assign('usersList', $usersList);
 
 $smarty->display('gestion.tpl');
 

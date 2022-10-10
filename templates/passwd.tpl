@@ -2,6 +2,8 @@
 
 <h2>Changement du mot de passe</h2>
 
+<h3>{$identite.nom} {$identite.prenom} [{$identite.acronyme}]</h3>
+
 <form id="form-passwd" autocomplete="off">
 
     <div class="col-md-6 col-xs-12">
@@ -36,7 +38,7 @@
 
     </div>
 
-    <button type="button" class="btn btn-primary pull-right" id="btn-save">Envoyer</button>
+    <button type="button" class="btn btn-primary pull-right" id="btn-savePwd">Envoyer</button>
 
     <div class="clearfix"></div>
     
@@ -56,7 +58,7 @@
                 else $('input.pwd').prop('type', 'text');
         })
 
-        $('#btn-save').click(function() {
+        $('#btn-savePwd').click(function() {
             if ($('#form-passwd').valid()) {
                 var formulaire = $('#form-passwd').serialize();
                 

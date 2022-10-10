@@ -12,6 +12,7 @@ $Application = new Application();
 require_once INSTALL_DIR.'/inc/classes/class.User.php';
 
 $User = isset($_SESSION[APPLICATION]) ? unserialize($_SESSION[APPLICATION]) : null;
+$identite = $User->getIdentite();
 
 // si pas d'utilisateur authentifié en SESSION et répertorié dans la BD, on renvoie à l'accueil
 if ($User == null) {
@@ -23,5 +24,7 @@ require_once(INSTALL_DIR."/smarty/Smarty.class.php");
 $smarty = new Smarty();
 $smarty->template_dir = "../templates";
 $smarty->compile_dir = "../templates_c";
+
+$smarty->assign('identite', $identite);
 
 $smarty->display('passwd.tpl');

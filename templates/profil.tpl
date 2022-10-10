@@ -127,8 +127,6 @@
 
 </form> 
 
-<div id="modal"></div>
-
 <style type="text/css">
 
     .help-block, .error {
@@ -176,27 +174,6 @@ $(document).ready(function(){
         }, function(resultat){
             bootbox.alert({
                 title: 'Enregistrement', 
-                message: resultat
-            })
-        })
-    })
-
-    // $('#btn-passwd').click(function(){
-    //     $.post('inc/changePwd.inc.php', {
-    //     }, 
-    //     function(resultat){
-    //         $('#modal').html(resultat);
-    //         $('#modalChangePwd').modal('show');
-    //     })
-    // })
-
-    $('body').on('click', '#btn-modalSavePwd', function(){
-        var formulaire = $('#formPasswd').serialize();
-        $.post('inc/saveNewPwd.inc.php', {
-            formulaire: formulaire
-        }, function(resultat){
-            bootbox.alert({
-                title: 'Enregistrement',
                 message: resultat
             })
         })

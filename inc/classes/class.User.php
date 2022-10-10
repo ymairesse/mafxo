@@ -494,10 +494,10 @@ class User {
         $sql .= 'LEFT JOIN '.PFX.'users AS users ON users.acronyme = lost.acronyme ';
         $sql .= 'WHERE token = :token AND lost.acronyme = :acronyme ';
         $requete = $connexion->prepare($sql);
-echo $sql;
+
         $requete->bindParam(':token', $token, PDO::PARAM_STR, 40);
         $requete->bindParam(':acronyme', $acronyme, PDO::PARAM_STR, 7);
-Application::afficher(array($acronyme, $token), true);
+
         $identite = Null;
         $resultat = $requete->execute();
         if ($resultat){

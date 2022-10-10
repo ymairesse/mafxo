@@ -23,6 +23,8 @@ if ($User == null) {
 }
 
 $acronyme = $User->getAcronyme();
+$identite = $User->getIdentite();
+$statut = $identite['statut'];
 
 $formulaire = isset($_POST['formulaire']) ? $_POST['formulaire'] : null;
 $form = array();
@@ -38,6 +40,7 @@ $adresse = isset($form['adresse']) ? $form['adresse'] : Null;
 $cpostal = isset($form['cpostal']) ? $form['cpostal'] : Null;
 $commune = isset($form['commune']) ? $form['commune'] : Null;
 $telephone = isset($form['telephone']) ? $form['telephone'] : Null;
+$form['statut'] = $statut;
 
 if (($nom != Null) && ($prenom != Null) && ($mail != Null)) {
 
