@@ -161,7 +161,7 @@ td.case {
 }
 
 #calendar-table td.conge {
-    background-color: #faa;
+    background-color: #afafb5;
     opacity: 0.6;
     cursor: default;
 }
@@ -196,4 +196,10 @@ a.selected {
 
 .badge.badge-success {
     background: #008800;
+}
+
+.case button.me.btn-primary {
+    background: pink !important;
+    opacity: 0.6;
+    color: #333;
 }

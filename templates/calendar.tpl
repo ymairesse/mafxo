@@ -36,9 +36,21 @@
 </div>
 <!-- --------------------------------------------------------------------------------- -->
 
+<!-- bouton modèle pour ajout dans la grille -->
+<div id="bouton" hidden>
+    <button type="button" 
+        class="btn btn-pink candidat btn-block"
+        data-acronyme="{$identite.acronyme}"
+        data-toggle="tooltip"
+        title="N'oubliez pas d'enregistrer">
+        <span class="visible-xs hidden-md hidden-lg">{$identite.acronyme} <span class="disk">(<i class="fa fa-floppy-o"></i>)</span></span>
+        <span class="visible-sm visible-md visible-lg">{$identite.prenom} {$identite.nom} <span class="disk">(<i class="fa fa-floppy-o"></i>)</span></span>
+    </button>
+</div>
+
 <!-- ---------------- Grille et formulaire d'inscription ---------------- -->
 
-<div style="max-height:45em; overflow: auto">
+<div style="max-height:75em; overflow: auto">
 
     <form id="formInscription" style="padding: 0 !important">
     
@@ -95,7 +107,7 @@
                     <div style="padding: 1em;">
 
                             <input  
-                                type="checkbox" name="inscriptions[]" class="inscription" hidden
+                                type="checkbox" name="inscriptions[]" class="inscription"  hidden 
                                 {if (isset($listeConges.feries.$laDate.$periode)) || (isset($listeConges.hebdo.$numJourSemaine.$periode))}disabled{/if}
                                 value="{$laDate}_{$periode}"
                                 data-date="{$laDate}"
@@ -114,11 +126,13 @@
                                         data-date="{$laDate}"
                                         data-periode="{$periode}">
                                         <span class="hidden-xs">
-                                            {if in_array($acronyme, $dataJournee.periodes.$periode|array_keys)}
-                                                Désinscription
-                                                {else}
-                                                Je m'inscris
-                                            {/if}
+                                            {assign var=visibles value=(in_array($acronyme, $dataJournee.periodes.$periode|array_keys))}
+                                            <span class="visible" {if in_array($acronyme, $dataJournee.periodes.$periode|array_keys) != '1'}hidden{/if}>
+                                            Désinscription
+                                            </span>
+                                            <span class="visible" {if in_array($acronyme, $dataJournee.periodes.$periode|array_keys) == '1'}hidden{/if}>
+                                            Inscription
+                                            </span>
                                         </span>
                                         <span class="visible-xs hidden-sm"><i class="fa fa-calendar-check-o"></i></span>
                                     </button>
@@ -129,6 +143,7 @@
                     <div class="listeBenevoles" data-date="{$laDate}" data-periode="{$periode}">
                         {foreach from=$benevoles item=unAcronyme}
                             {assign var=benevole value=$usersList.$unAcronyme}
+
                             <button type="button" class="btn {if $unAcronyme == $acronyme}me btn-danger{else}btn-primary{/if} btn-block " 
                                 data-toggle="popover"
                                 data-html="true"
@@ -137,9 +152,10 @@
                                 data-container="body"
                                 data-acronyme="{$acronyme}"
                                 data-placement="top">
-                                <span class="visible-xs hidden-md hidden-lg">{$unAcronyme} <span class="disk hidden">(<i class="fa fa-floppy-o"></i>)</span></span>
-                                <span class="visible-sm visible-md visible-lg">{$benevole.prenom} {$benevole.nom} <span class="disk hidden">(<i class="fa fa-floppy-o"></i>)</span></span>
+                                <span class="visible-xs hidden-md hidden-lg">{$unAcronyme} <span class="disk" hidden>(<i class="fa fa-floppy-o"></i>)</span></span>
+                                <span class="visible-sm visible-md visible-lg">{$benevole.prenom} {$benevole.nom} <span class="disk" hidden>(<i class="fa fa-floppy-o"></i>)</span></span>
                             </button>
+
                         {/foreach}
                     </div>
 
@@ -161,14 +177,12 @@
 <script>
 
     $(document).ready(function(){
-    
-//	    $('[data-toggle="popover"]').popover();
 
     $('[data-toggle="popover"]').on('click',function(e){
         e.preventDefault();
     }).popover();
 
-        $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="tooltip"]').tooltip();
     
     })
 

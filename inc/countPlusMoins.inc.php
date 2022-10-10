@@ -8,10 +8,6 @@ require_once '../config.inc.php';
 require_once INSTALL_DIR.'/inc/classes/class.Application.php';
 $Application = new Application();
 
-// récupération de 'action' qui définit toujours l'action principale à prendre
-$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : null;
-
-
 // définition de la class USER utilisée en variable de SESSION
 require_once INSTALL_DIR.'/inc/classes/class.User.php';
 $User = isset($_SESSION[APPLICATION]) ? unserialize($_SESSION[APPLICATION]) : null;
@@ -30,11 +26,12 @@ parse_str($formulaire, $form);
 $year = isset($_POST['year']) ? $_POST['year'] : Null;
 $month = isset($_POST['month']) ? $_POST['month'] : Null;
 
-if (($year != Null) && ($month != Null))
-    $yearMonth = sprintf("%d_%02d", $year, $month);
-    else die('Mauvais format de date');
+$yearMonth = sprintf("%d_%02d", $year, $month);
 
 $oldInscriptions = $Application->getInscriptions($yearMonth, $acronyme);
+
+Application::afficher($oldInscriptions, true);
+
 // remise en ordre des périodes de permanence
 $dataOld = array();
 foreach ($oldInscriptions as $laDate => $data4dates) {
@@ -54,13 +51,11 @@ if (isset($form['inscriptions']))
         $dataNew[$key] = array('date' => $data[0], 'periode' => $data[1]);
     }
 
+
 // périodes disparues à effacer
 $nbToDelete = count(array_diff(array_keys($dataOld), array_keys($dataNew)));
 
 // périodes à ajouter
 $nbToAdd = count(array_diff(array_keys($dataNew), array_keys($dataOld)));
 
-$message = sprintf('Vous allez supprimer <strong>%d</strong> période(s) et ajouter <strong>%d</strong> période(s) de permanence', $nbToDelete, $nbToAdd);
-$message .= '<br>VEUILLEZ CONFIRMER';
-
-echo $message;
+print_r(array('delete' => $nbToDelete, 'add' => $nbToAdd));

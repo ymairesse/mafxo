@@ -18,6 +18,4 @@ if ($User == null) {
     die(Null);
 }
 
-$acronyme = $User->getAcronyme();
-
-echo $acronyme;
+echo "ok";
