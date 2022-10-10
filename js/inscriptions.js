@@ -1,4 +1,4 @@
-$('body').on('click', '.btn-inscription', function(event){
+$('body').on('click', '#formInscription .btn-inscription', function(event){
 
     $.post('inc/testSession.inc.php', {},
         function(resultat){
@@ -108,7 +108,7 @@ $('body').on('click', '#btn-saveCalendar', function(){
         )
     })
 
-$('body').on('click', '.btn-sameAsDay', function(){
+$('body').on('click', '#formInscription .btn-sameAsDay', function(){
         var title = 'Report de vos inscriptions';
         var message = '<br><strong style="color:red">N\'OUBLIEZ PAS D\'ENREGISTRER</strong>';
         var jour = $(this).data('dayofweek');
