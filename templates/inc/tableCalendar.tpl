@@ -96,7 +96,7 @@
                                 data-container="body"
                                 data-acronyme="{$acronyme}"
                                 data-placement="top">
-                                <span class="visible-xs hidden-md hidden-lg">{$unAcronyme} <span class="disk" hidden>(<i class="fa fa-floppy-o"></i>)</span></span>
+                                <span class="visible-xs hidden-md hidden-lg">{$benevole.prenom|truncate:10:"...":true} <span class="disk" hidden>(<i class="fa fa-floppy-o"></i>)</span></span>
                                 <span class="visible-sm visible-md visible-lg">{$benevole.prenom} {$benevole.nom} <span class="disk" hidden>(<i class="fa fa-floppy-o"></i>)</span></span>
                             </button>
 

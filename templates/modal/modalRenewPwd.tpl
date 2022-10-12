@@ -16,8 +16,8 @@
 
             <div class="form-group">
               <label for="passwd">Veuillez indiquer votre identifiant (6 ou 7 signes) ou l'adresse mail de votre profil</label>
-              <input type="text" class="form-control" id="identifiant" name="identifiant" minlength="6" maxlength="60"
-                placeholder="Votre identifiant">
+              <input type="text" class="form-control" id="identifiantMDP" name="identifiantMDP" minlength="6" maxlength="60"
+                placeholder="Votre identifiant" value="">
             </div>
           
           <div class="clearfix"></div>
