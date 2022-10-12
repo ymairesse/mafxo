@@ -12,7 +12,7 @@
 
     $User = new User();
 
-    $identifiant = isset($_POST['identifiant']) ? trim($_POST['identifiant']) : Null;
+    $identifiant = isset($_POST['identifiant']) ? strtolower(trim($_POST['identifiant'])) : Null;
 
     // est-ce une adresse mail?
 

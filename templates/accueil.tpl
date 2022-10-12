@@ -87,12 +87,13 @@
 		$('input').not('.autocomplete').attr('autocomplete', false);
 
 		$('body').on('click', '#btn-modalRenewPwd', function(){
-			var identifiant = $('#identifiant').val();
+			var identifiant = $('#identifiantMDP').val();
 			$.post('inc/prepareNewPasswd.inc.php', {
 				identifiant: identifiant
 				},
 				function(resultat){
 					alert(resultat);
+					$('#modalRenewPwd').modal('hide');
 				}
 			)
 		});
@@ -100,7 +101,7 @@
 
 		$('#formLogin').validate({
 			rules: {
-				acronyme: {
+				identifiant: {
 					required: true,
 					minlength: 6,
 					maxlength: 60
