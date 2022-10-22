@@ -15,7 +15,7 @@
                 id="passwd" 
                 name="passwd" 
                 minlength="6" 
-                maxlength="12" 
+                maxlength="20" 
                 placeholder="Le mot de passe que vous souhaitez utiliser"
                 autocomplete="off">
         </div>
@@ -31,7 +31,7 @@
                 id="passwd2" 
                 name="passwd2" 
                 minlength="6" 
-                maxlength="12" 
+                maxlength="20" 
                 placeholder="Répétez le mot de passe que vous souhaitez utiliser"
                 autocomplete="off">
         </div>
@@ -77,7 +77,7 @@
             rules: {
                 passwd: {
                     minlength: 6,
-                    maxlength: 12,
+                    maxlength: 20,
                 },
                 passwd2: {
                     equalTo: "#passwd"

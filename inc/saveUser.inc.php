@@ -36,20 +36,24 @@ $nom = isset($form['nom']) ? $form['nom'] : Null;
 $prenom = isset($form['prenom']) ? $form['prenom'] : Null;
 $mail = isset($form['mail']) ? $form['mail'] : Null;
 
-$adresse = isset($form['adresse']) ? $form['adresse'] : Null;
-$cpostal = isset($form['cpostal']) ? $form['cpostal'] : Null;
-$commune = isset($form['commune']) ? $form['commune'] : Null;
-$telephone = isset($form['telephone']) ? $form['telephone'] : Null;
+$passwd = isset($form['passwd']) ? $form['passwd'] : Null;
+$passwd2 = isset($form['passwd2']) ? $form['passwd2'] : Null;
 $form['statut'] = $statut;
 
-if (($nom != Null) && ($prenom != Null) && ($mail != Null)) {
-
+if (($nom != Null) && ($prenom != Null) && ($mail != Null) && ($passwd == $passwd2)) {
     $User = new User();
     
     $nb = $User->saveUserdata($form);
     $nb = ($nb == 2) ? 1 : $nb;
 
-    $message = sprintf("%d enregistrement réussi. ", $nb);
+    $message = sprintf("<strong>%d</strong> modification de votre profil.", $nb);
+
+    if (($passwd != Null) &&  ($passwd == $passwd2)) {
+        $nbPasswd = $User->savePasswd ($form['acronyme'], $passwd);
+        if ($nbPasswd == 1)
+            $message .= sprintf("<br>Votre mot de passe a été modifié");
+        }
     }
+    else $message = "Il manque une information: NOM, PRENOM, MAIL et/ou MOT DE PASSE";
 
 echo $message;

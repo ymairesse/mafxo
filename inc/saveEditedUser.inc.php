@@ -19,27 +19,22 @@ $nom = isset($form['nom']) ? $form['nom'] : Null;
 $prenom = isset($form['prenom']) ? $form['prenom'] : Null;
 $mail = isset($form['mail']) ? $form['mail'] : Null;
 $passwd = isset($form['passwd']) ? $form['passwd'] : Null;
+$passwd2 = isset($form['passwd2']) ? $form['passwd2'] : Null;
+$acronyme = isset($form['acronyme']) ? $form['acronyme'] : Null;
 
-if (($nom != Null) && ($prenom != Null) && ($mail != Null) && ($passwd != Null)) {
-    $form['acronyme'] = $Application->acronyme4nomPrenom($nom, $prenom);
-    $form['statut'] = 'user'; // protection anti-usurpation
+if (($nom != Null) && ($prenom != Null) && ($mail != Null) && ($acronyme != Null)) {
     $User = new User();
     
     $nb = $User->saveUserdata($form);
-    
     $nb = ($nb == 2) ? 1 : $nb;
 
-    $message = sprintf("<strong>%d</strong> enregistrement réussi. ", $nb);
+    $message = sprintf("<strong>%d</strong> enregistrement du profil. ", $nb);
 
-    switch ($nb) {
-        case 0: 
-            $message .= sprintf("L'utilisateur <strong>%s</strong> existerait-il déjà? ", $form['acronyme']);
-            break;
-        case 1:
-            $nbPasswd = $User->savePasswd ($form['acronyme'], $passwd);
-            $message .= sprintf("Votre nom d'utilisateur est <strong>%s</strong>", $form['acronyme']);
-            break;
-        }
+    if (($passwd != Null) &&  ($passwd == $passwd2)) {
+        $nbPasswd = $User->savePasswd ($form['acronyme'], $passwd);
+        if ($nbPasswd == 1)
+            $message .= sprintf("<br>Le mot de passe de <strong>%s %s</strong> a été modifié", $form['prenom'], $form['nom']);
+    }
     }
 else $message = "Il manque une information: PSEUDO, NOM, PRENOM, MAIL et/ou MOT DE PASSE";
 

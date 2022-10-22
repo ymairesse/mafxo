@@ -19,15 +19,17 @@ if ($User == null) {
 	exit;
 }
 
+$triUsers = isset($_COOKIE['triUsers']) ? $_COOKIE['triUsers'] : 'alphaNom';
+
 require_once INSTALL_DIR.'/smarty/Smarty.class.php';
 $smarty = new Smarty();
 $smarty->template_dir = INSTALL_DIR."/templates";
 $smarty->compile_dir = INSTALL_DIR."/templates_c";
 
-$acronyme = $User->getAcronyme();
-$smarty->assign('acronyme', $acronyme);
+// liste des utilisateurs triés sur nom ou prenom selon le Cookie
+$usersList = $Application->getUsersList($triUsers);
 
-$identite = $User->getIdentiteUser($acronyme);
-$smarty->assign('identite', $identite);
+$smarty->assign('usersList', $usersList);
+$smarty->assign('triUsers', $triUsers);
 
-$smarty->display('modal/modalProfil.tpl');
+$smarty->display('inc/ulUsersList.tpl');

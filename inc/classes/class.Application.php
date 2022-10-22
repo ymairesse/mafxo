@@ -175,6 +175,24 @@ class Application {
         }
 
     /**
+     * Suppression des accents
+     * 
+     * @param string $input
+     * 
+     * @return string
+     */
+    public function accentsOut($input){
+        $unwanted_array = array(
+                'Š'=>'S', 'š'=>'s', 'Ž'=>'Z', 'ž'=>'z', 'À'=>'A', 'Á'=>'A', 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A', 'Å'=>'A', 'Æ'=>'A', 'Ç'=>'C', 'È'=>'E', 'É'=>'E',
+                'Ê'=>'E', 'Ë'=>'E', 'Ì'=>'I', 'Í'=>'I', 'Î'=>'I', 'Ï'=>'I', 'Ñ'=>'N', 'Ò'=>'O', 'Ó'=>'O', 'Ô'=>'O', 'Õ'=>'O', 'Ö'=>'O', 'Ø'=>'O', 'Ù'=>'U',
+                'Ú'=>'U', 'Û'=>'U', 'Ü'=>'U', 'Ý'=>'Y', 'Þ'=>'B', 'ß'=>'Ss', 'à'=>'a', 'á'=>'a', 'â'=>'a', 'ã'=>'a', 'ä'=>'a', 'å'=>'a', 'æ'=>'a', 'ç'=>'c',
+                'è'=>'e', 'é'=>'e', 'ê'=>'e', 'ë'=>'e', 'ì'=>'i', 'í'=>'i', 'î'=>'i', 'ï'=>'i', 'ð'=>'o', 'ñ'=>'n', 'ò'=>'o', 'ó'=>'o', 'ô'=>'o', 'õ'=>'o',
+                'ö'=>'o', 'ø'=>'o', 'ù'=>'u', 'ú'=>'u', 'û'=>'u', 'ý'=>'y', 'þ'=>'b', 'ÿ'=>'y' );
+        $input = strtr( $input, $unwanted_array );
+        return $input;
+    }
+
+    /**
      * calcule l'acronyme sur base du nom et du prénom
      * 
      * @param string $nom
@@ -183,8 +201,8 @@ class Application {
      * @return string
      */
     public function acronyme4nomPrenom($nom, $prenom){
-        $nom = mb_strtolower(str_replace(' ','', $nom), 'UTF-8');
-        $prenom = mb_strtolower(str_replace(' ','', $prenom), 'UTF-8');
+        $nom = $this->accentsOut(mb_strtolower(str_replace(' ','', $nom), 'UTF-8'));
+        $prenom = $this->accentsOut(mb_strtolower(str_replace(' ','', $prenom), 'UTF-8'));
 
         $acronyme = mb_substr($nom, 0, 3).mb_substr($prenom, 0, 3);
         $acronyme = $acronyme.mb_substr('123456', 0, 6 - mb_strlen($acronyme));
@@ -342,15 +360,19 @@ class Application {
     /**
      * renvoie la liste des utilisateurs indexée sur l'acronyme
      * 
-     * @param void
+     * @param string $triUsers le critère de tri: 'alphaNom' ou 'alphaPrenom'
      * 
      * @return array
      */
-    public function getUsersList(){
+    public function getUsersList($triUsers = 'triAlpha'){
         $connexion = self::connectPDO(SERVEUR, BASE, NOM, MDP);
         $sql = 'SELECT acronyme, nom, prenom, statut, telephone, mail, adresse, cpostal, commune ';
         $sql .= 'FROM '.PFX.'users ';
-        $sql .= 'ORDER BY nom, prenom, acronyme ';
+
+        if ($triUsers == 'alphaNom')
+            $sql .= 'ORDER BY nom, prenom, acronyme ';
+            else
+            $sql .= 'ORDER BY prenom, nom, acronyme ';
 
         $requete = $connexion->prepare($sql);
 

@@ -136,16 +136,10 @@ input[type='text'], input[type='passwd'], select, textarea {
     background-color: #99ff99;
 }
 
-#calendar-table td {
-    border: 1px solid #00ff00;
-}
-
 .listeBenevoles button {
-    background: #008000;
     margin: 2px;
     padding: 1px;
     text-align:center;
-    color: #ffffff
 }
 
 .me {
@@ -160,8 +154,13 @@ td.candidat {
     background-color: #ccf;
 }
 
-td.case {
+#calendar-table td {
     cursor: pointer;
+    border-bottom: solid 2px #333 !important;
+}
+
+.beginOfWeek {
+    border-top: 5px dotted #f00;
 }
 
 #calendar-table td.conge {
@@ -207,3 +206,31 @@ a.selected {
     opacity: 0.6;
     color: #333;
 }
+
+.blink {
+    animation: blink 1s steps(1, end) infinite;
+  }
+  
+  @keyframes blink {
+    0% {
+      opacity: 1;
+    }
+    25% {
+        opacity: 0.50
+    }
+    50% {
+      opacity: 0;
+    }
+    75% {
+        opacity: 0.75
+    }
+    100% {
+      opacity: 1;
+    }
+
+  }
+ 
+  h3.popover-title{
+    background-color: rgb(139, 219, 139);
+    color: #000;
+  }

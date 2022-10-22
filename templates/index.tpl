@@ -30,12 +30,30 @@
 
 <script src="js/inscriptions.js"></script>	
 <script src="js/conge.js"></script>
+<script src="js/gestion.js"></script>
 
 <script>
+
+	function testSession(){
+		$.post('inc/testSession.inc.php', {},
+			function(resultat){
+			if (resultat == '') {
+				bootbox.alert({
+					title: 'Dépassement du délai',
+					message: 'Votre session s\'est achevée. Veuillez vous reconnecter.',
+					callback: function(){
+						window.location.replace('accueil.php');
+					}
+					})
+				}
+			})
+		}
 
 	$(document).ready(function() {
 
 		$('body').on('click', '#btn-gestion', function(){
+			testSession();
+
 			var month = $('#month').val();
 			var year = $('#year').val();;
 			
@@ -54,21 +72,9 @@
 			$('button.candidat').remove();
 		})
 
-		// $('body').on('click', '#btn-save', function(event) {
-		// 	if ($('#form-passwd').valid()) {
-        //         var formulaire = $('#form-passwd').serialize();
-        //         $.post('inc/saveNewPwd.inc.php', {
-        //             formulaire: formulaire
-        //         }, function(resultat){
-        //             bootbox.alert({
-        //                 title: 'Enregistrement',
-        //                 message: resultat
-        //             })
-        //         })
-        //     }
-        // })
-
 		$('body').on('click', '#btn-conges', function(){
+			testSession();
+
 			var month = $('#month').val();
 			var year = $('#year').val();;
 			
@@ -82,6 +88,8 @@
 		})
 
 		$('body').on('click', '#btn-savePeriodes', function(){
+			testSession();
+
 			var formulaire = $('#formEditPeriodes').serialize();
 			$.post('inc/savePeriodes.inc.php', {
 				formulaire: formulaire},
@@ -93,46 +101,12 @@
 			})
 		})
 
-		$('body').on('click', '.btn-prevMonth', function(){
-			var month = parseInt($('#month').val());
-			var year = parseInt($('#year').val());
-			if (month == 1) {
-				month = 12;
-				year = year-1
-				}
-				else month = month-1;
-			$('#year').val(year);
-			$('#month').val(month);
-			$.post('inc/getCalendar.inc.php', {
-				month: month,
-				year: year
-			}, function(resultat) {
-				$('#corpsPage').html(resultat);
-			})
-		})
-
-		$('body').on('click', '.btn-nextMonth', function(){
-			var month = parseInt($('#month').val());
-			var year = parseInt($('#year').val());
-			if (month == 12) {
-				month = 1;
-				year = year+1
-				}
-				else month = month+1;
-			$('#year').val(year);
-			$('#month').val(month);
-
-			$.post('inc/getCalendar.inc.php', {
-				month: month,
-				year: year
-				}, function(resultat) {
-			$('#corpsPage').html(resultat);
-			})
-		})
-
 		$('#btn-calendrier').click(function() {
+			testSession();
+
 			var month = $('#month').val();
 			var year = $('#year').val();
+
 			$.post('inc/getCalendar.inc.php', {
 				month: month,
 				year: year
@@ -142,6 +116,8 @@
 		})
 
 		$('#btn-periodes').click(function(){
+			testSession();
+
 			$.post('inc/editPeriodes.inc.php', {}, function(resultat){
 				$('#corpsPage').html(resultat);
 			})
@@ -163,12 +139,30 @@
 		})
 
 		$('#btn-profil').click(function() {
+			testSession();
+
 			$.post('inc/editProfile.inc.php', {}, function(resultat) {
-				$('#corpsPage').html(resultat);
+				$('#modal').html(resultat);
+				$('#modalProfil').modal('show');
 			})
 		})
 
+		$('body').on('click', '#btn-saveProfil', function(){
+			if ($('#formEditionProfil').valid()) {
+				var formulaire = $('#formEditionProfil').serialize();
+				$.post('inc/saveUser.inc.php', {
+					formulaire: formulaire
+				}, function(resultat){
+					bootbox.alert(resultat);
+					$('#modalProfil').modal('hide');
+				})
+			}
+		})
+
+
 		$('#btn-passwd').click(function(){
+			testSession();
+			
 			$.post('inc/passwd.inc.php', {}, function(resultat){
 				$('#corpsPage').html(resultat);
 			})

@@ -19,15 +19,11 @@ if ($User == null) {
 	exit;
 }
 
-require_once INSTALL_DIR.'/smarty/Smarty.class.php';
-$smarty = new Smarty();
-$smarty->template_dir = INSTALL_DIR."/templates";
-$smarty->compile_dir = INSTALL_DIR."/templates_c";
-
-$acronyme = $User->getAcronyme();
-$smarty->assign('acronyme', $acronyme);
+$acronyme = isset($_POST['acronyme']) ? $_POST['acronyme'] : Null;
+$ordre = isset($_POST['ordre']) ? $_POST['ordre'] : Null;
 
 $identite = $User->getIdentiteUser($acronyme);
-$smarty->assign('identite', $identite);
 
-$smarty->display('modal/modalProfil.tpl');
+if ($ordre == 'alphaNom')
+	echo sprintf("%s %s", $identite['nom'], $identite['prenom']);
+	else echo sprintf("%s %s", $identite['prenom'], $identite['nom']);

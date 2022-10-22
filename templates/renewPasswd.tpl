@@ -14,7 +14,7 @@
                     id="passwd" 
                     name="passwd" 
                     minlength="6" 
-                    maxlength="12" 
+                    maxlength="20" 
                     placeholder="Le mot de passe que vous souhaitez utiliser"
                     autocomplete="off">
                     <span class="input-group-btn">
@@ -30,7 +30,7 @@
             <div class="form-group">
                 <label for="passwd">Mot de passe souhaité *</label>
                 <div class="input-group">
-                <input type="password" class="form-control pwd" id="passwd2" name="passwd2" minlength="6" maxlength="12" placeholder="Répétez le mot de passe que vous souhaitez utiliser">
+                <input type="password" class="form-control pwd" id="passwd2" name="passwd2" minlength="6" maxlength="20" placeholder="Répétez le mot de passe que vous souhaitez utiliser">
                     <span class="input-group-btn">
                         <button class="btn btn-primary voir" type="button"><i class="fa fa-eye"></i></button>
                     </span>

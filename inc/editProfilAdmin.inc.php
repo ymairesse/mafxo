@@ -19,15 +19,15 @@ if ($User == null) {
 	exit;
 }
 
+$acronyme = isset($_POST['acronyme']) ? $_POST['acronyme'] : Null;
+
+$identite = $User->getIdentiteUser($acronyme);
+
 require_once INSTALL_DIR.'/smarty/Smarty.class.php';
 $smarty = new Smarty();
 $smarty->template_dir = INSTALL_DIR."/templates";
 $smarty->compile_dir = INSTALL_DIR."/templates_c";
 
-$acronyme = $User->getAcronyme();
-$smarty->assign('acronyme', $acronyme);
-
-$identite = $User->getIdentiteUser($acronyme);
 $smarty->assign('identite', $identite);
 
-$smarty->display('modal/modalProfil.tpl');
+$smarty->display('modal/modalProfilAdmin.tpl');

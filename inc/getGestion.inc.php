@@ -48,6 +48,7 @@ $daysOfWeek = $Application->getDaysName();
 
 $year = isset($_POST['year']) ? $_POST['year'] : date('Y');
 $month = isset($_POST['month']) ? $_POST['month'] : date('n');
+$acronyme = isset($_POST['acronyme']) ? $_POST['acronyme'] : Null;
 
 $nbJours = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 
@@ -88,12 +89,6 @@ $smarty->assign('listeConges', $listeConges);
 $usersList = $Application->getUsersList('triAlpha');
 $smarty->assign('usersList', $usersList);
 
-$acronyme = $User->getAcronyme();
-$smarty->assign('acronyme', $acronyme);
-
-$identite = $User->getIdentiteUser($acronyme);
-$smarty->assign('identite', $identite);
-
 $monthName = $Application->monthName($month);
 $smarty->assign('monthName', $monthName);
 
@@ -106,8 +101,9 @@ $smarty->assign('calendar', $calendar);
 // liste des périodes avec début et fin
 $smarty->assign('listePeriodes', $listePeriodes);
 
+
 $smarty->assign('daysOfWeek', $daysOfWeek);
 
 $smarty->assign('inscriptions', $inscriptions);
 
-$smarty->display('calendar.tpl');
+$smarty->display('inc/tableGestion.tpl');

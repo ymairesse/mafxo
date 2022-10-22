@@ -1,10 +1,11 @@
 <?php
 
+session_start();
+
 require_once 'config.inc.php';
 
 // définition de la class USER
 require_once INSTALL_DIR.'/inc/classes/class.User.php';
-session_start();
 
 // définition de la class Application
 require_once INSTALL_DIR.'/inc/classes/class.Application.php';

@@ -12,13 +12,14 @@ include 'entetes.inc.php';
 require_once INSTALL_DIR.'/inc/classes/class.User.php';
 $User = isset($_SESSION[APPLICATION]) ? unserialize($_SESSION[APPLICATION]) : null;
 
-
 // si pas d'utilisateur authentifié en SESSION et répertorié dans la BD, on renvoie à l'accueil
-if ($User == null) {
+if ($User == NULL) {
 	header('Location: '.BASEDIR.'/accueil.php');
 	exit;
 }
 
+// tri des utilisateurs sur base des noms ou des prénoms
+$triUsers = isset($_COOKIE['triUsers']) ? $_COOKIE['triUsers'] : 'alphaNom';
 
 require_once INSTALL_DIR."/smarty/Smarty.class.php";
 $smarty = new Smarty();
@@ -85,8 +86,10 @@ foreach ($inscriptions as $date => $lesPeriodes){
 $listeConges = $Application->getListeConges($month, $year, true);
 $smarty->assign('listeConges', $listeConges);
 
-$usersList = $Application->getUsersList();
+// liste des utilisateurs triés sur nom ou prenom selon le Cookie
+$usersList = $Application->getUsersList($triUsers);
 $smarty->assign('usersList', $usersList);
+$smarty->assign('triUsers', $triUsers);
 
 $acronyme = $User->getAcronyme();
 $smarty->assign('acronyme', $acronyme);
@@ -103,10 +106,8 @@ $smarty->assign('calendar', $calendar);
 // liste des périodes avec début et fin
 $smarty->assign('listePeriodes', $listePeriodes);
 
-
 $smarty->assign('daysOfWeek', $daysOfWeek);
 
 $smarty->assign('inscriptions', $inscriptions);
 
 $smarty->display('gestion.tpl');
-

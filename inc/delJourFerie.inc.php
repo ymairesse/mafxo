@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 require_once '../config.inc.php';
 
 // définition de la class APPLICATION
@@ -8,7 +10,6 @@ $Application = new Application();
 
 // définition de la class USER
 require_once INSTALL_DIR.'/inc/classes/class.User.php';
-session_start();
 
 if (!(isset($_SESSION[APPLICATION]))) {
     echo "<script type='text/javascript'>document.location.replace('".BASEDIR."');</script>";
