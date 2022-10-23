@@ -43,6 +43,7 @@
 					message: 'Votre session s\'est achevée. Veuillez vous reconnecter.',
 					callback: function(){
 						window.location.replace('accueil.php');
+						exit();
 					}
 					})
 				}
@@ -68,7 +69,20 @@
 
 		$('body').on('click', '#reset', function(){
 			$('#formInscription')[0].reset();
-			$('.me').removeClass('unSelect');	
+			$('.me').removeClass('toDelete btn-primary').addClass('btn-danger');
+			$('.me').find('span.disk').hide();
+			$('#calendar-table .case').each(function(i){
+				var cb = $(this).find('input:checkbox');
+				var status = $(this).find('input:checkbox').is(':checked');
+				if (status == true) {
+					cb.closest('td').find('.visible.desinscription').show();
+					cb.closest('td').find('.visible.inscription').hide();
+					}
+					else {
+					cb.closest('td').find('.visible.desinscription').hide();
+					cb.closest('td').find('.visible.inscription').show();
+					}
+			})
 			$('button.candidat').remove();
 		})
 
@@ -87,19 +101,7 @@
 				})
 		})
 
-		$('body').on('click', '#btn-savePeriodes', function(){
-			testSession();
 
-			var formulaire = $('#formEditPeriodes').serialize();
-			$.post('inc/savePeriodes.inc.php', {
-				formulaire: formulaire},
-				function(resultat){
-					bootbox.alert({
-						title: 'Enregistrement',
-						message: resultat + ' périodes enregistrées'
-					})
-			})
-		})
 
 		$('#btn-calendrier').click(function() {
 			testSession();
@@ -119,7 +121,23 @@
 			testSession();
 
 			$.post('inc/editPeriodes.inc.php', {}, function(resultat){
-				$('#corpsPage').html(resultat);
+				$('#modal').html(resultat);
+				$('#modalEditPeriodes').modal('show');
+			})
+		})
+
+		$('body').on('click', '#btn-savePeriodes', function(){
+			testSession();
+
+			var formulaire = $('#formEditPeriodes').serialize();
+			$.post('inc/savePeriodes.inc.php', {
+				formulaire: formulaire},
+				function(resultat){
+					bootbox.alert({
+						title: 'Enregistrement',
+						message: resultat + ' périodes enregistrées'
+					});
+					$('#modalEditPeriodes').modal('hide');
 			})
 		})
 

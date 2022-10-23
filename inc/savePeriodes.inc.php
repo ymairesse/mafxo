@@ -12,8 +12,8 @@ $formulaire = isset($_POST['formulaire']) ? $_POST['formulaire'] : null;
 $form = array();
 parse_str($formulaire, $form);
 
-foreach ($form['id'] as $id => $wtf) {
-    $listePeriodes[] = array('id' => $id, 'debut' => $form['debut'][$id], 'fin' => $form['fin'][$id]);
+foreach ($form['id'] as $n => $id) {
+    $listePeriodes[$n] = array('id' => $id, 'debut' => $form['debut'][$n], 'fin' => $form['fin'][$n]);
 }
 
 $nb = $Application->savePeriodes($listePeriodes);

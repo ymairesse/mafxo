@@ -234,3 +234,21 @@ a.selected {
     background-color: rgb(139, 219, 139);
     color: #000;
   }
+
+  .shout {
+    font-size: 14pt;
+    color: #ff0000;
+}
+
+.shout::before {
+    font-size: 26pt;
+    font-weight: bolder;
+    content: '!!!';
+    margin-right: 0.5em;
+    padding: 1em 0;
+}
+
+button.confirmed {
+    background-color: white !important;
+    color: black !important;
+}

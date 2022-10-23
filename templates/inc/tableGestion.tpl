@@ -27,9 +27,7 @@
 
     <tr>
         <th style="width:10%">
-        <button type="button" class="btn btn-danger btn-block" id="btnFreeze2">
-            <i class="fa fa-angle-double-right"></i><i class="fa fa-mortar-board"></i>
-        </button>
+            &nbsp;
         </th>
 
         {foreach from=$listePeriodes key=noPeriode item=$periode}
@@ -48,13 +46,13 @@
             <td style="padding:0">
 
                     <button type="button" 
-                        class="btn btn-success btn-xs btn-block" 
+                        class="btn btn-default btn-xs btn-block" 
                         data-dayofweek = "{$dataJournee.day.dayOfWeek}">
                             {$dataJournee.day.fr|substr:0:2}<br><span style="font-size:1.2em">{$dataJournee.day.fr|substr:4}</span>
                     </button>
-                    <div class="btn-group btn-group-justified">
+                    <div class="btn-group-vertical btn-block">
                     <a href="#" 
-                        class="btn btn-primary btn-xs btn-confirm" 
+                        class="btn btn-primary btn-xs btn-block btn-confirm" 
                         data-toggle="tooltip" 
                         data-container="body"
                         data-placement="right"
@@ -63,7 +61,7 @@
                         1
                     </a>
                     <a href="#" 
-                        class="btn btn-warning btn-xs btn-confirm" 
+                        class="btn btn-warning btn-xs btn-block btn-confirm" 
                         data-toggle="tooltip" 
                         data-container="body"
                         data-placement="right"
@@ -72,7 +70,7 @@
                         2
                     </a>
                     <a href="#" 
-                        class="btn btn-info btn-xs btn-confirm" 
+                        class="btn btn-info btn-xs btn-block btn-confirm" 
                         data-toggle="tooltip" 
                         data-container="body"
                         data-placement="right"
@@ -80,14 +78,14 @@
                         title="Confirmer les trois 1ers">
                         3
                     </a>
-                    </div> 
+                </div>
 
             </td>
 
             {foreach from=$dataJournee.periodes key=periode item=dateHeure}
-                
+                <!-- liste des acronymes pour cette période -->
                 {assign var=benevoles value=$dataJournee.periodes.$periode|array_keys}
-                
+    
                 <td data-periode="{$periode}" 
                     data-date="{$laDate}" 
                     class="case {if (isset($listeConges.feries.$laDate.$periode)) || (isset($listeConges.hebdo.$numJourSemaine.$periode))}conge{/if}"
@@ -129,18 +127,43 @@
 
                             {assign var=benevole value=$usersList.$unAcronyme}
 
-                            <button type="button" class="btn btn-primary btn-block btn-benevole" 
-                                data-toggle="popover"
-                                data-html="true"
-                                data-title="Paramètres de contact"
-                                data-content="{$benevole.prenom} {$benevole.nom}<br>{$benevole.mail}<br>{$benevole.telephone}<br>"
-                                data-container="body"
-                                data-acronyme="{$benevole.acronyme}"
-                                data-confirme="false"
-                                data-placement="top">
-                                <span class="visible-xs hidden-md hidden-lg">{$benevole.prenom|truncate:10:"...":true} <span class="disk" hidden>(<i class="fa fa-floppy-o"></i>)</span></span>
-                                <span class="visible-sm visible-md visible-lg">{$benevole.prenom} {$benevole.nom} <span class="disk" hidden>(<i class="fa fa-floppy-o"></i>)</span></span>
-                            </button>
+                            <div class="btn-group btn-group-justified doubleBtn">
+
+                                <div class="btn-group" style="width:85%">
+                                    <button type="button" 
+                                        class="btn btn-primary btn-block btn-benevole {if $calendar.$laDate.periodes.$periode.$unAcronyme.confirme == 1}confirmed{/if}" 
+                                        data-toggle="popover"
+                                        data-html="true"
+                                        data-title="Paramètres de contact"
+                                        data-content="{$benevole.prenom} {$benevole.nom}<br>
+                                            <i class='fa fa-send'></i> {$benevole.mail}<br>
+                                            <i class='fa fa-phone'></i> {$benevole.telephone}"
+                                        data-container="body"
+                                        data-acronyme="{$benevole.acronyme}"
+                                        data-confirme="false"
+                                        data-placement="top">
+                                            <span class="visible-xs hidden-md hidden-lg">
+                                                {$benevole.prenom|truncate:10:"...":true} 
+                                                    <span class="check">{if $calendar.$laDate.periodes.$periode.$unAcronyme.confirme == 1} <i class="fa fa-check"></i>{/if}</span>
+                                                <span class="disk" hidden>(<i class="fa fa-floppy-o"></i>)</span>
+                                            </span>
+                                            <span class="visible-sm visible-md visible-lg">
+                                                {$benevole.prenom} {$benevole.nom} 
+                                                    <span class="check">{if $calendar.$laDate.periodes.$periode.$unAcronyme.confirme == 1}<i class="fa fa-check"></i>{/if}</span>
+                                                <span class="disk" hidden>(<i class="fa fa-floppy-o"></i>)</span>
+                                            </span>
+                                    </button>
+                                </div>
+
+                                <div class="btn-group" style="width:15%">
+                                    <button type="button" 
+                                        class="btn btn-success btn-confirmePermanence"
+                                        data-acronyme="{$unAcronyme}">
+                                            <i class="fa fa-check"></i>
+                                    </button>
+                                </div>
+
+                            </div>
 
                         {/foreach}
                     </div>

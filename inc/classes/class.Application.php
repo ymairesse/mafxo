@@ -566,13 +566,9 @@ class Application {
      */
     public function savePeriodes($listePeriodes) {
         $connexion = self::connectPDO(SERVEUR, BASE, NOM, MDP);
-        // vider les périodes existantes
-        $sql = 'TRUNCATE '.PFX.'periodes ';
-        $requete = $connexion->prepare($sql);
-        $requete->execute();
-
         $sql = 'INSERT INTO '.PFX.'periodes ';
         $sql .= 'SET id = :id, debut = :debut, fin = :fin ';
+        $sql .= 'ON DUPLICATE KEY UPDATE debut = :debut, fin = :fin ';
         $requete = $connexion->prepare($sql);
 
         $nb = 0;
@@ -582,8 +578,8 @@ class Application {
             $requete->bindParam(':fin', $unePeriode['fin'], PDO::PARAM_STR, 5);
 
             $requete->execute();
-            $nb += $requete->rowCount();
-        }
+            $nb += ($requete->rowCount() == 2) ? 1 : 0;
+        } 
 
         self::DeconnexionPDO($connexion);
 
@@ -841,6 +837,102 @@ class Application {
         $mail->Body = $texte;
 
         return !$mail->Send();
+    }
+
+    /**
+     * renvoie les mois figurant dans le calendrier
+     * 
+     * @param void
+     * 
+     * @return array
+     */
+    public function getCalendarMonths() {
+        $connexion = self::connectPDO(SERVEUR, BASE, NOM, MDP);
+        $sql = 'SELECT DISTINCT SUBSTRING(date, 1, 7) AS mois ';
+        $sql .= 'FROM '.PFX.'calendar ';
+        $sql .= 'ORDER BY mois ';
+        $requete = $connexion->prepare($sql);
+
+        $resultat = $requete->execute();
+
+        $requete->setFetchMode(PDO::FETCH_ASSOC);
+        $listeMois = array();
+        while ($ligne = $requete->fetch()){
+            // $mois sous la forme YYYY-mm
+            $mois = $ligne['mois'];
+            $laDate = explode('-', $mois);
+            $year = $laDate[0];
+            $month = $laDate[1];
+            $monthName = $this->monthName((int) $month);
+            $listeMois[$mois] = array('year' => $year, 'month' => $month, 'monthName' => $monthName);
+        }
+
+        self::DeconnexionPDO($connexion);
+
+        return $listeMois;
+    }
+
+    /**
+     * renvoie le statut de freezing du mois $month
+     * 
+     * @param string $monthListString Ex: 2022-09
+     * 
+     * @return array
+     */
+    public function getFreezings4month($monthsList){
+        $monthsListString = "'".implode("','", $monthsList)."'";
+        $connexion = self::connectPDO(SERVEUR, BASE, NOM, MDP);
+        $sql = 'SELECT date, status  ';
+        $sql .= 'FROM '.PFX.'freeze ';
+        $sql .= 'WHERE date IN ('.$monthsListString.') ';
+        $sql .= 'ORDER BY date ';
+        $requete = $connexion->prepare($sql);
+
+        $resultat = $requete->execute();
+        $requete->setFetchMode(PDO::FETCH_ASSOC);
+
+        $freezes = array();
+        while ($ligne = $requete->fetch()){
+            $date = $ligne['date'];
+            $laDate = explode('-', $date);
+            $year = $laDate[0];
+            $month = $laDate[1];
+            $monthName = $this->monthName((int) $month);
+            $freeze = $ligne['status'];
+            $freezes[$date] = $freeze;
+            }
+
+        self::DeconnexionPDO($connexion);
+
+        return $freezes;
+    }
+
+    /**
+     * Enregistre le $statut de freezing pour le $mois donnée
+     * 
+     * @param string $month sous forme XXXX-mm
+     * @param int $status (0, 1 ou 2)
+     * 
+     * @return int (nombre de modifications -0 ou 1)
+     */
+    public function saveFreezingStatus($month, $status){
+        $connexion = self::connectPDO(SERVEUR, BASE, NOM, MDP);
+        $sql = 'INSERT INTO '.PFX.'freeze ';
+        $sql .= 'SET date = :month, status = :status ';
+        $sql .= 'ON DUPLICATE KEY UPDATE status = :status ';
+        $requete = $connexion->prepare($sql);
+
+        $requete->bindParam(':month', $month, PDO::PARAM_STR, 7);
+        $requete->bindParam(':status', $status, PDO::PARAM_INT);
+
+        $resultat = $requete->execute();
+
+        $nb = $requete->rowCount();
+        $nb = ($nb==2) ? 1 : $nb;
+
+        self::DeconnexionPDO($connexion);
+
+        return $nb;
     }
 
 }

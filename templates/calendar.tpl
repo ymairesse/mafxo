@@ -1,3 +1,4 @@
+
 <div class="clearfix"></div>
 
 <!-- -------------------- Enregistrement et reset -------------------- -->
@@ -11,6 +12,9 @@
     <button type="button" class="btn btn-default btn-sm" id="reset">
         <i class="fa fa-recycle"></i><span class="hidden-xs"> Annuler les modifications</span>
     </button>
+
+    {if $freezeStatus == 1} <button type="button" data-toggle="tooltip" title="Attention, désinscriptions plus possibles" class="btn btn-sm btn-warning"> <i class="fa fa-anchor"></i></button>{/if}
+    {if $freezeStatus == 2} <button type="button"  data-toggle="tooltip" title="Attention, plus d'inscrirptions possibles" class="btn btn-sm btn-danger"> <i class="fa fa-anchor"></i></button>{/if}
 
 </div>
 <!-- --------------------------------------------------------------------------------- -->

@@ -111,6 +111,10 @@ $smarty->assign('calendar', $calendar);
 // liste des périodes avec début et fin
 $smarty->assign('listePeriodes', $listePeriodes);
 
+$ym = sprintf('%d-%02d', $year, $month);
+$freezeStatus = $Application->getFreezings4month(array($ym))[$ym];
+$smarty->assign('freezeStatus', $freezeStatus);
+
 $smarty->assign('daysOfWeek', $daysOfWeek);
 
 $smarty->assign('inscriptions', $inscriptions);

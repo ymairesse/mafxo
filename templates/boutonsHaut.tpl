@@ -16,6 +16,10 @@
 	{if $identite.statut == 'admin'}
 		<div class="btn-group pull-right">
 
+		<button type="button" class="btn btn-success btn-sm" id="btn-freeze">
+			<i class="fa fa-anchor"></i><span class="hidden-xs"> Freeze</span>
+		</button>
+
 		<button type="button" class="btn btn-warning btn-sm" id="btn-gestion">
 			<i class="fa fa-calendar-check-o"></i><span class="hidden-xs">Gestion</span>
 		</button>

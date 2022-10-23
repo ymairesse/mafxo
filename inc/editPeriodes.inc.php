@@ -9,6 +9,6 @@ require_once '../config.inc.php';
 include 'entetes.inc.php';
 
 $listePeriodes = $Application->getPeriodes();
-
 $smarty->assign('listePeriodes', $listePeriodes);
-$smarty->display('editPeriodes.tpl');
+
+$smarty->display('modal/modalEditPeriodes.tpl');

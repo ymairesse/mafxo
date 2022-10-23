@@ -1,8 +1,6 @@
-<script src="js/jquery-2.1.3.min.js"></script>
+<script src="js/jquery-3.2.1.min.js"></script>
 
 <script src="js/jquery.validate.js"></script>
-
-<script src="js/toTop/jquery.ui.totop.js"></script>
 
 <script src="bootstrap/js/bootstrap.min.js"></script>
 
@@ -23,5 +21,3 @@
   });
 
 </script>
-
-

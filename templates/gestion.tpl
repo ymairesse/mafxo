@@ -22,7 +22,7 @@
 <div id="bouton" hidden>
     <button type="button" 
         class="btn btn-pink candidat btn-block"
-        data-acronyme=""
+        data-acronyme   =""
         data-toggle="tooltip"
         title="N'oubliez pas d'enregistrer">
         <span class="visible-xs hidden-md hidden-lg">

@@ -612,20 +612,90 @@ class User {
             return $liste;
         }
 
- 
-    /**
-     * Vérifie la force d'un mot de passe
-     * 
-     * @param string $passwd
-     * 
-     * @return bool
-     */
-    public function verifPasswdStrength($passwd) {
-        preg_match_all('/[A-Za-z]/', $passwd, $letters);
-        preg_match_all('/[0-9]/', $passwd, $numbers);
+        /**
+         * Suppression du profil de l'utilisateur $pseudo
+         * 
+         * @param string $pseudo
+         * 
+         * @return array (nombre de permanences, de passwd et de profils supprimés)
+         */
+        public function deleteProfile($pseudo){
+            $connexion = Application::connectPDO(SERVEUR, BASE, NOM, MDP);
+            // effacement de toutes les permanences dans le calendrier
+            $sql = 'DELETE FROM '.PFX.'calendar ';
+            $sql .= 'WHERE acronyme = :pseudo ';
+            $requete = $connexion->prepare($sql);
 
-        return ((count($letters[0]) >= 2) && (count($numbers[0]) >= 2));
-            // return 1;
-            // else return 0;
+            $requete->bindParam(':pseudo', $pseudo, PDO::PARAM_STR, 7);
+
+            $resultat = $requete->execute();
+            $nbCalendar = $requete->rowCount();
+
+            // effacement de la table des mots de passe
+            $sql = 'DELETE FROM '.PFX.'passwd ';
+            $sql .= 'WHERE acronyme = :pseudo ';
+            $requete = $connexion->prepare($sql);
+
+            $requete->bindParam(':pseudo', $pseudo, PDO::PARAM_STR, 7);
+
+            $resultat = $requete->execute();
+            $nbPasswd = $requete->rowCount();
+
+            // effacement de la table des users
+            $sql = 'DELETE FROM '.PFX.'users ';
+            $sql .= 'WHERE acronyme = :pseudo ';
+            $requete = $connexion->prepare($sql);
+
+            $requete->bindParam(':pseudo', $pseudo, PDO::PARAM_STR, 7);
+
+            $resultat = $requete->execute();
+            $nbProfile = $requete->rowCount();
+
+            Application::deconnexionPDO($connexion);
+
+            return array('nbCalendar' => $nbCalendar,
+                'nbPasswd' => $nbPasswd,
+                'nbProfile' => $nbProfile);
         }
+
+        /**
+         * confirme la permanence de la date $date et la période $periode pour l'utilisateur $acronyme
+         * 
+         * @param string $date
+         * @param int $periode
+         * @param string $acronyme
+         * 
+         * @return bool
+         */
+        public function confirmePermanence($date, $periode, $acronyme){
+            $connexion = Application::connectPDO(SERVEUR, BASE, NOM, MDP);
+            $sql = 'UPDATE '.PFX.'calendar ';
+            $sql .= 'SET confirme = NOT confirme ';
+            $sql .= 'WHERE date LIKE :date AND periode = :periode AND acronyme = :acronyme ';
+            $requete = $connexion->prepare($sql);
+
+            $requete->bindParam(':acronyme', $acronyme, PDO::PARAM_STR, 7);
+            $requete->bindParam(':date', $date, PDO::PARAM_STR, 7);
+            $requete->bindParam(':periode', $periode, PDO::PARAM_INT);
+
+            $resultat = $requete->execute();
+
+            $sql = 'SELECT confirme FROM '.PFX.'calendar ';
+            $sql .= 'WHERE date LIKE :date AND periode = :periode AND acronyme = :acronyme ';
+            $requete = $connexion->prepare($sql);
+
+            $requete->bindParam(':acronyme', $acronyme, PDO::PARAM_STR, 7);
+            $requete->bindParam(':date', $date, PDO::PARAM_STR, 7);
+            $requete->bindParam(':periode', $periode, PDO::PARAM_INT);
+
+            $resultat = $requete->execute();
+
+            $ligne = $requete->fetch();
+            $confirme = $ligne['confirme'];
+
+            Application::deconnexionPDO($connexion);
+
+            return $confirme;
+        }
+
 }

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost:3306
--- Généré le : dim. 23 oct. 2022 à 19:13
+-- Généré le : dim. 23 oct. 2022 à 19:48
 -- Version du serveur : 10.6.7-MariaDB-2ubuntu1.1
 -- Version de PHP : 8.1.2
 
@@ -24,33 +24,23 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Structure de la table `ox_periodes`
+-- Structure de la table `ox_freeze`
 --
 
-CREATE TABLE `ox_periodes` (
-  `id` tinyint(4) NOT NULL COMMENT 'Identifiant du shift',
-  `debut` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Début du shift',
-  `fin` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Fin du shift'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Déchargement des données de la table `ox_periodes`
---
-
-INSERT INTO `ox_periodes` (`id`, `debut`, `fin`) VALUES
-(0, '10h00', '12h30'),
-(1, '12h30', '15h00'),
-(2, '15h00', '18h00');
+CREATE TABLE `ox_freeze` (
+  `date` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Calendrier freezé',
+  `status` tinyint(4) NOT NULL DEFAULT 0 COMMENT '0 = ouvert, 1 = no desinscription, 2 = total'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Périodes freezées';
 
 --
 -- Index pour les tables déchargées
 --
 
 --
--- Index pour la table `ox_periodes`
+-- Index pour la table `ox_freeze`
 --
-ALTER TABLE `ox_periodes`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `ox_freeze`
+  ADD PRIMARY KEY (`date`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

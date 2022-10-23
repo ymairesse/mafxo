@@ -1,3 +1,66 @@
+$('body').on('click', '#btn-prevMonth', function(){
+    var nbCandidat = $('.listeBenevoles .candidat').length;
+    var nbToDelete = $('.listeBenevoles .toDelete').length;
+    var total = nbCandidat + nbToDelete;
+    if (total > 0) {
+        bootbox.alert({
+            title: 'Attention',
+            message: 'Vous avez <strong> ' + total + '</strong> modification(s) non enregistrée(s).<br>Veuillez la/les annuler.'
+           })
+        }
+        else {
+            var month = parseInt($('#month').val());
+            var year = parseInt($('#year').val());
+            if (month == 1) {
+                month = 12;
+                year = year-1
+                }
+                else month = month-1;
+            $('#year').val(year);
+            $('#month').val(month);
+            Cookies.set('month', month, { sameSite: 'strict' });
+            Cookies.set('year', year, { sameSite: 'strict' });
+            $.post('inc/getCalendar.inc.php', {
+                month: month,
+                year: year
+            }, function(resultat) {
+                $('#corpsPage').html(resultat);
+            })
+        }
+})
+
+$('body').on('click', '#btn-nextMonth', function(){
+    var nbCandidat = $('.listeBenevoles .candidat').length;
+    var nbToDelete = $('.listeBenevoles .toDelete').length;
+    var total = nbCandidat + nbToDelete;
+    if (total > 0) {
+        bootbox.alert({
+            title: 'Attention',
+            message: 'Vous avez <strong> ' + total + '</strong> modification(s) non enregistrée(s).<br>Veuillez la/les annuler.'
+           })
+        }
+    else {
+    var month = parseInt($('#month').val());
+    var year = parseInt($('#year').val());
+    if (month == 12) {
+        month = 1;
+        year = year+1
+        }
+        else month = month+1;
+    $('#year').val(year);
+    $('#month').val(month);
+    Cookies.set('month', month, { sameSite: 'strict' });
+    Cookies.set('year', year, { sameSite: 'strict' });
+    $.post('inc/getCalendar.inc.php', {
+        month: month,
+        year: year
+        }, function(resultat) {
+           $('#corpsPage').html(resultat);
+        })
+    }
+})
+
+
 $('body').on('click', '#formInscription .btn-inscription', function(event){
 
     $.post('inc/testSession.inc.php', {},
@@ -9,9 +72,41 @@ $('body').on('click', '#formInscription .btn-inscription', function(event){
         })
 
     var date = $(this).data('date');
-
     var periode = $(this).data('periode');
+
     var checkbox = $('input:checkbox.inscription[data-periode="' + periode + '"][data-date="' + date + '"]');
+    // isChecked sera à True s'il s'agit d'une désinscription
+    var isChecked = checkbox.is(':checked');
+    var freezeStatus = $('#freezeStatus').val();
+
+    var title='Clôture des inscriptions';
+    if (freezeStatus > 0) 
+        message = '<div class="shout">Un administrateur a, partiellement ou totalement, clôturé les inscriptions.<br>';
+
+    if (freezeStatus == 2) {
+        bootbox.alert({
+            title: title,
+            message: message + '<strong>Les INSCRIPTIONS et les DÉSINSCRIPTIONS sont clôturées.</strong></div>'
+        });
+        return;
+    }
+
+    if (!(isChecked) && (freezeStatus == 1)) {
+        bootbox.alert({
+            title: title,
+            message: message + '<strong>Attention, il ne vous sera pas possible de vous DÉSINSCRIRE.</strong></div>'
+        })
+    }
+
+    if (isChecked && (freezeStatus > 0)) {
+        bootbox.alert({
+            title: title,
+            message: message + '<strong>Les DÉSINSCRIPTIONS ne sont plus possibles. Les INSCRIPTIONS sont encore possibles.</strong></div>  '
+        })
+        return;
+    }
+    
+    // 
     // cocher ou décocher la case
     checkbox.trigger('click');
 
@@ -23,7 +118,7 @@ $('body').on('click', '#formInscription .btn-inscription', function(event){
     if (isChecked == true) {
         if (ceci.find('.listeBenevoles button.me').length != 0){
             // si un bouton .me existe, il repasse à la couleur rouge
-            ceci.find('.listeBenevoles button.me').removeClass('btn-primary').addClass('btn-danger');
+            ceci.find('.listeBenevoles button.me').removeClass('btn-primary toDelete').addClass('btn-danger');
             // on supprime l'icône de la disquette
             ceci.find('.listeBenevoles button.me').find('.disk').prop('hidden', true);
             }
@@ -31,7 +126,6 @@ $('body').on('click', '#formInscription .btn-inscription', function(event){
                 var bouton = $('#bouton').html(); 
                 // ajouter le bouton pour le candidat bénévole à la période
                 $('td[data-date="' + date + '"][data-periode="' + periode + '"]').find('.listeBenevoles').append(bouton);
-                // ceci.find('.listeBenevoles button'.me).find('.disk').last().prop('hidden', false);
                 }
     }
     else {
@@ -41,7 +135,7 @@ $('body').on('click', '#formInscription .btn-inscription', function(event){
         }, function(acronyme){
             if (ceci.find('.listeBenevoles button.me').length > 0) {
                 // mise au rebut d'une inscription enregistrée
-                ceci.find('.listeBenevoles button.me').removeClass('btn-danger').addClass('btn-primary');
+                ceci.find('.listeBenevoles button.me').removeClass('btn-danger').addClass('btn-primary toDelete');
                 ceci.find('.listeBenevoles button.me').find('.disk').last().prop('hidden', false);
             }
             else {
@@ -108,7 +202,31 @@ $('body').on('click', '#btn-saveCalendar', function(){
         )
     })
 
-$('body').on('click', '#formInscription .btn-sameAsDay', function(){
+    $('body').on('click', '#formInscription .btn-sameAsDay', function(){
+        var ceci = $(this);
+        var freezeStatus = $('#freezeStatus').val();
+
+        var title='Clôture des inscriptions';
+        if (freezeStatus > 0) 
+            message = '<div class="shout">Un administrateur a, partiellement ou totalement, clôturé les inscriptions.<br>';
+
+        if (freezeStatus == 2) {
+            bootbox.alert({
+                title: title,
+                message: message + '<strong>Les INSCRIPTIONS et les DÉSINSCRIPTIONS sont clôturées.</strong></div>'
+            });
+            return;
+        }
+
+        if (freezeStatus == 1) {
+            if (ceci.closest('tr').find('input:checkbox').is(':checked'))
+                bootbox.alert({
+                    title: title,
+                    message: message + '<strong>Attention, il ne vous sera pas possible de vous DÉSINSCRIRE.</strong></div>'
+                });
+                else return;
+        }
+
         var title = 'Report de vos inscriptions';
         var message = '<br><strong style="color:red">N\'OUBLIEZ PAS D\'ENREGISTRER</strong>';
         var jour = $(this).data('dayofweek');

@@ -1,4 +1,5 @@
 $('body').on('click', '.btn-editProfile', function(){
+    testSession();
     var acronyme = $(this).data('acronyme');
     $('.btn-editProfile').removeClass('selected');
     $(this).addClass('selected');
@@ -12,6 +13,7 @@ $('body').on('click', '.btn-editProfile', function(){
 })
 
 $('body').on('click', '#btn-saveProfilAdmin', function(){
+    testSession();
     var formulaire = $('#formEditionProfil').serialize();
     $.post('inc/saveEditedUser.inc.php', {
         formulaire: formulaire
@@ -63,7 +65,9 @@ function resetGestion(){
     $('#calendar-table').find('button.btn-benevole').removeClass('btn-danger').addClass('btn-primary');
     $('#calendar-table').find('button.btn-benevole').removeClass('btn-lightRed toDelete');
     // désélection des checkboxes
-    // $('#calendar-table').find('input:checkbox').prop('checked', false);
+    $('#calendar-table').find('input:checkbox').prop('checked', false);
+    // suppression du marqueur temporaire "confirme"
+    $('#calendar-table').find('button.confirme').removeClass('confirme');
     // bouton "Inscription" et "Désinscription"
     $('#calendar-table').find('.desinscription').addClass('hidden');
     $('#calendar-table').find('.inscription').removeClass('hidden');
@@ -79,20 +83,19 @@ $('body').on('click', '.btn-user', function(){
     if (total > 0) {
         bootbox.alert({
             title: 'Attention',
-            message: 'Vous avez <strong> '+total+'</strong> modifications non enregistrées.<br><strong>Veuillez les annuler</strong>.',
+            message: 'Vous avez <strong> '+total+'</strong> modifications non enregistrée(s).<br><strong>Veuillez annuler d\'abord.</strong>.',
         })
     }
     else {
         resetGestion();
     
         $('.btn-user').removeClass('selected');
+        // marquer le bouton comme "selected"
         $(this).addClass('selected');
-    
+        // rechercher l'acronyme correspondant
         var acronyme = $('#usersList a.selected').data('acronyme');
-        $('#acronyme').val(acronyme);
-    
+        // mise en évidence de tous les boutons pour le bénévole ("confirme") et visuellement en "btn-danger"
         $('#calendar-table').find('button[data-acronyme="' + acronyme + '"]').removeClass('btn-primary').addClass('btn-danger confirme');
-        
         $('#calendar-table').find('button[data-acronyme="' + acronyme + '"]').closest('td').find('input:checkbox').prop('checked', true);
         $('#calendar-table').find('button[data-acronyme="' + acronyme + '"]').closest('td').find('.desinscription').removeClass('hidden');
         $('#calendar-table').find('button[data-acronyme="' + acronyme + '"]').closest('td').find('span.inscription').addClass('hidden');
@@ -100,6 +103,7 @@ $('body').on('click', '.btn-user', function(){
 })
 
 $('body').on('click', '#resetGestion', function(){
+    testSession();
     var nbCandidats = $('.listeBenevoles .candidat').length;
     var nbToDelete = $('.listeBenevoles .toDelete').length;
     var total = nbCandidats + nbToDelete;
@@ -128,13 +132,7 @@ $('body').on('click', '#resetGestion', function(){
 
 $('body').on('click', '#formGestion .btn-inscription', function(){
 
-    $.post('inc/testSession.inc.php', {},
-        function(resultat){
-        if (resultat == '') {
-            alert('Votre session est s\'est achevée. Veuillez vous reconnecter.');
-            window.location.replace('accueil.php');
-            }
-        })
+    testSession();
 
     var acronyme = $('#usersList a.selected').data('acronyme');
     if (acronyme == undefined){
@@ -154,34 +152,49 @@ $('body').on('click', '#formGestion .btn-inscription', function(){
 
     if (BDconfirmed) {
         var checked = $('#calendar-table td[data-date="'+date+'"][data-periode="'+periode+'"]').find('input:checkbox').is(':checked')
+        // la checkbox est cochée, c'était une inscription ferme
         if (checked == true) {
+            // on décoche la case
             cellule.find('input:checkbox').prop('checked', false);
+            // le bouton qui était en couleur btn-danger passe en btn-lightRed avec le flag "toDelete"
             cellule.find('button.confirme').removeClass('btn-danger').addClass('btn-lightRed toDelete');
+            // l'icône de la disquette est montré
             cellule.find('button.confirme').find('.disk').last().prop('hidden', false);
+            // on arrange les boutons Inscription/désinscription comme il faut
             $('.btn-inscription[data-date="' + date + '"][data-periode="' + periode + '"] span.desinscription').addClass('hidden');
             $('.btn-inscription[data-date="' + date + '"][data-periode="' + periode + '"] span.inscription').removeClass('hidden')
         }
         else {
+            // c'était une hésitation sur la suppression, on revient en arrière
+            // la case est re-cochée
             cellule.find('input:checkbox').prop('checked', true);
+            // le bouton est remis en couleur btn-danger et le drapeau "toDelete" est supprimé
             cellule.find('button.confirme').removeClass('btn-lightRed toDelete').addClass('btn-danger');
+            // on cache l'icône de la disquette
             cellule.find('button.confirme').find('.disk').last().prop('hidden', true);
+            // on arrange les boutons Inscription/désinscription comme il faut
             $('.btn-inscription[data-date="' + date + '"][data-periode="' + periode + '"] span.desinscription').removeClass('hidden');
             $('.btn-inscription[data-date="' + date + '"][data-periode="' + periode + '"] span.inscription').addClass('hidden')
         }
     }
     else {
+        // Y a-t-il déjà un bouton mauve ("candidat") dans cette case?
         var candidat = cellule.find('button.candidat').length > 0;
 
         if (candidat == true) {
+            // alors, c'est une suppression du "candidat"
             cellule.find('button.candidat').remove();
             cellule.find('input:checkbox').prop('checked', false);
+            // on arrange comme il faut le bouton d'inscription
             $('.btn-inscription[data-date="' + date + '"][data-periode="' + periode + '"] span.desinscription').addClass('hidden');
             $('.btn-inscription[data-date="' + date + '"][data-periode="' + periode + '"] span.inscription').removeClass('hidden')
         }
         else {
+            // on prépare un nouveau bouton pour cette permanence
             var leBouton = $('#bouton button').clone();
             var nom = $('#usersList a.selected').data('nom').trim();
             var prenom = $('#usersList a.selected').data('prenom').trim();
+            // on indique nom et prenom
             leBouton.find('span.nom').text(nom);
             leBouton.find('span.prenom').text(prenom);
             cellule.find('.listeBenevoles').append(leBouton);
@@ -201,13 +214,7 @@ $('body').on('click', '#btn-saveGestion', function(){
 
     var title = 'Enregistrement des permanences';
 
-    $.post('inc/testSession.inc.php', {},
-        function(resultat){
-        if (resultat == '') {
-            alert('Votre session est s\'est achevée. Veuillez vous reconnecter.');
-            window.location.replace('accueil.php');
-            }
-        })
+    testSession();
 
     $.post('inc/warningModifGestion.inc.php', {
         month: month,
@@ -255,6 +262,7 @@ $('body').on('click', '#btn-saveGestion', function(){
     })
 
     $('body').on('click', '#btn-prevGestMonth', function(){
+        testSession();
         var nbCandidat = $('.listeBenevoles .candidat').length;
         var nbToDelete = $('.listeBenevoles .toDelete').length;
         var total = nbCandidat + nbToDelete;
@@ -287,6 +295,7 @@ $('body').on('click', '#btn-saveGestion', function(){
     })
 
     $('body').on('click', '#btn-nextGestMonth', function(){
+        testSession();
         var nbCandidat = $('.listeBenevoles .candidat').length;
         var nbToDelete = $('.listeBenevoles .toDelete').length;
         var total = nbCandidat + nbToDelete;
@@ -318,7 +327,109 @@ $('body').on('click', '#btn-saveGestion', function(){
     }
     })
 
+    $('body').on('click', '#btn-delBenevole', function(){
+        var title = 'Effacement du profil'
+        bootbox.confirm({
+            title: title,
+            message: '<span style="font-weight:bold; color: red">Effacement définitif de cette/ce bénévole (irrévocable)</span><br><b>Veuillez confirmer</b>',
+            callback: function(result){
+                if (result == true){
+                    var acronyme = $('#formEditionProfil input#acro').val();
+                    $.post('inc/delProfile.inc.php', {
+                        pseudo: acronyme
+                    }, function(resultatJSON){
+                        resultat = JSON.parse(resultatJSON);
+                        bootbox.alert({
+                            title: title,
+                            message: resultat['message']
+                        });
+                        if (resultat['ok'] == true) {
+                            $('#modalProfilAdmin').modal('hide');
+                            $('.btn[data-acronyme="' + acronyme + '"]').remove();
+                        }
+                    })
+                }
+            }
+        })
+    })
+
+    $('body').on('click', '#btn-freeze', function(){
+        $.post('inc/getFreezing.inc.php', {},
+            function(resultat){
+                $('#modal').html(resultat);
+                $('#modalFreezing').modal('show');
+            })
+    })
+
+    $('body').on('click', '#btn-modalFreeze', function(){
+        var formulaire = $('#formFreeze').serialize();
+        $.post('inc/saveFreezing.inc.php', {
+            formulaire: formulaire
+            }, function(resultat){
+                bootbox.alert({
+                    title: 'Enregistrement des blocages d\'inscriptions',
+                    message: resultat
+                });
+                $('#modalFreezing').modal('hide');
+            })
+    })
+
     $('body').on('click', '.btn-confirm', function(){
+        testSession();
         var nombre = $(this).data('nombre');
-        alert(nombre);
+        var periodes = $(this).closest('tr').find('td.case');
+        periodes.each(function(i){
+            var listeBenevoles = $(this).find('.btn-benevole');
+            // on considère la liste des bénévoles de la période
+            // on les compte sur le paramètre "x"
+            listeBenevoles.each(function(x){
+                // on ne dépasse pas le nombre d'inscriptions automatiques demandé
+                if (x < nombre){
+                    // $(this) est le xième élément des la liste des bénévoles
+                    var ceci = $(this);
+                    var acronyme = $(this).data('acronyme');
+                    var periode = $(this).closest('td').data('periode');
+                    var date = $(this).closest('td').data('date');
+                    $.post('inc/confirmePermanence.inc.php', {
+                        acronyme: acronyme,
+                        date: date,
+                        periode: periode
+                    }, function(resultat){
+                        var leBouton = ceci.closest('.doubleBtn').find('.btn-benevole');
+                        if (resultat == 1) {
+                            leBouton.addClass('confirmed');
+                            leBouton.find('.check').html('<i class="fa fa-check"></i>').show();
+                        }
+                        else {
+                            leBouton.removeClass('confirmed');
+                            leBouton.find('.check').hide()
+                        }
+                    })
+                }
+            })
+        })
+    })
+
+    $('body').on('click', '.btn-confirmePermanence', function(){
+        var ceci = $(this);
+        var date = ceci.closest('td').data('date');
+        var periode = ceci.closest('td').data('periode');
+        var acronyme = ceci.data('acronyme');
+        $.post('inc/confirmePermanence.inc.php', {
+            acronyme: acronyme,
+            date: date,
+            periode: periode
+        }, function(resultat){
+            var leBouton = ceci.closest('.doubleBtn').find('.btn-benevole');
+            if (resultat == 1) {
+                leBouton.addClass('confirmed');
+                leBouton.find('.check').html('<i class="fa fa-check"></i>').show();
+            }
+            else {
+                leBouton.removeClass('confirmed');
+                leBouton.find('.check').hide()
+            }
+        })
+        
+
     })

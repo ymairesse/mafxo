@@ -20,6 +20,8 @@
 
 <!-- --------------------------------------------------------------------------------- -->
 
+<input type="hidden" id="freezeStatus" name="freezeStatus" value="{$freezeStatus}">
+
 <table class="table table-condensed" id="calendar-table">
 
     <tr>
@@ -74,7 +76,7 @@
                 <div style="padding: 1em;">
 
                     <input  
-                        type="checkbox" name="inscriptions[]" class="inscription"  hidden 
+                        type="checkbox" name="inscriptions[]" class="inscription" hidden
                         {if (isset($listeConges.feries.$laDate.$periode)) || (isset($listeConges.hebdo.$numJourSemaine.$periode))}disabled{/if}
                         value="{$laDate}_{$periode}"
                         data-date="{$laDate}"
@@ -85,6 +87,7 @@
                         <span class="badge badge-info">{$listePeriodes.$periode.debut}</span>
 
                         {if !((isset($listeConges.feries.$laDate.$periode)) || (isset($listeConges.hebdo.$numJourSemaine.$periode)))}
+
                             <button type="button" 
                                 class="btn btn-xs btn-primary btn-inscription pull-right" 
                                 data-placement="left" 
@@ -92,35 +95,49 @@
                                 title="Inscription ou désinscription"
                                 data-date="{$laDate}"
                                 data-periode="{$periode}">
+
                                 <span class="hidden-xs">
                                     {assign var=visibles value=(in_array($acronyme, $dataJournee.periodes.$periode|array_keys))}
-                                    <span class="visible" {if in_array($acronyme, $dataJournee.periodes.$periode|array_keys) != '1'}hidden{/if}>
+                                    <span class="visible desinscription" {if (in_array($acronyme, $dataJournee.periodes.$periode|array_keys) != '1')}hidden{/if}>
                                     Désinscription
                                     </span>
-                                    <span class="visible" {if in_array($acronyme, $dataJournee.periodes.$periode|array_keys) == '1'}hidden{/if}>
+                                    <span class="visible inscription" {if (in_array($acronyme, $dataJournee.periodes.$periode|array_keys) == '1')}hidden{/if}>
                                     Inscription
                                     </span>
                                 </span>
                                 <span class="visible-xs hidden-sm"><i class="fa fa-calendar-check-o"></i></span>
                             </button>
+
                         {/if}
 
                 </div>
 
                 <div class="listeBenevoles" data-date="{$laDate}" data-periode="{$periode}">
                     {foreach from=$benevoles item=unAcronyme}
+
                         {assign var=benevole value=$usersList.$unAcronyme}
 
-                        <button type="button" class="btn {if $unAcronyme == $acronyme}me btn-danger{else}btn-primary{/if} btn-block " 
+                        <button 
+                            type="button" 
+                            class="btn {if $unAcronyme == $acronyme}me btn-danger{else}btn-primary{/if} {if $calendar.$laDate.periodes.$periode.$unAcronyme.confirme == 1}confirmed{/if} btn-block" 
                             data-toggle="popover"
                             data-html="true"
                             data-title="Paramètres de contact"
-                            data-content="{$benevole.prenom} {$benevole.nom}<br>{$benevole.mail}<br>{$benevole.telephone}<br>"
+                            data-content="{$benevole.prenom} {$benevole.nom}<br>
+                                    <i class='fa fa-send'></i> {$benevole.mail}<br>
+                                    <i class='fa fa-phone'></i> {$benevole.telephone|default:'---'}"
                             data-container="body"
                             data-acronyme="{$acronyme}"
                             data-placement="top">
-                            <span class="visible-xs hidden-md hidden-lg">{$benevole.prenom|truncate:10:"...":true} <span class="disk" hidden>(<i class="fa fa-floppy-o"></i>)</span></span>
-                            <span class="visible-sm visible-md visible-lg">{$benevole.prenom} {$benevole.nom} <span class="disk" hidden>(<i class="fa fa-floppy-o"></i>)</span></span>
+                            <span class="visible-xs hidden-md hidden-lg">{$benevole.prenom|truncate:10:"...":true}  
+                            {if $calendar.$laDate.periodes.$periode.$unAcronyme.confirme == 1} <i class="fa fa-check"></i>{/if}
+                                <span class="disk" hidden>(<i class="fa fa-floppy-o"></i>)</span>
+                            </span>
+                            <span class="visible-sm visible-md visible-lg">
+                            {$benevole.prenom} {$benevole.nom}
+                                {if $calendar.$laDate.periodes.$periode.$unAcronyme.confirme == 1}<i class="fa fa-check"></i>{/if}
+                             <span class="disk" hidden>(<i class="fa fa-floppy-o"></i>)</span>
+                             </span>
                         </button>
 
                     {/foreach}
@@ -134,3 +151,4 @@
     {/foreach}
 
 </table>
+

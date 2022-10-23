@@ -195,6 +195,7 @@
       </div>
 
       <div class="modal-footer">
+        <button type="button" class="btn btn-danger pull-left" id="btn-delBenevole"><i class="fa fa-warning"></i> Suppression du profil</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
         <button type="button" class="btn btn-primary" id="btn-saveProfilAdmin">Enregistrer</button>
       </div>
