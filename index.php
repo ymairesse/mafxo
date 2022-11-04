@@ -28,8 +28,6 @@ $smarty->assign('titre', $titre);
 $smarty->assign('year', $year);
 $smarty->assign('month', $month);
 
-// $smarty->assign('action', $action);
-
 $netId = $Application->getNetid();
 $smarty->assign('netId', $netId);
 $smarty->assign('BASEDIR', BASEDIR);

@@ -329,6 +329,32 @@ class Application {
     }
 
     /**
+     * Effacement de tout le calendrier d'un $month et d'une $year donnés
+     * 
+     * @param int $month
+     * @param int $year
+     * 
+     * @return int
+     */
+    public function deleteCalendar($year, $month) {
+        $periode = sprintf('%d-%02d-', $year, $month).'%';
+        $connexion = self::connectPDO(SERVEUR, BASE, NOM, MDP);
+        $sql = 'DELETE FROM '.PFX.'calendar ';
+        $sql .= 'WHERE date LIKE :periode ';
+        $requete = $connexion->prepare($sql);
+
+        $requete->bindParam(':periode', $periode, PDO::PARAM_STR, 9);
+
+        $resultat = $requete->execute();
+
+        $nb = $requete->rowCount();
+        
+        self::DeconnexionPDO($connexion);
+
+        return $nb;
+    }
+
+    /**
      * Ajoute une inscription pour la permanence $periode ($numérique) à la date $date (YYYY-mm-dd)
      * pour l'utilisateur $acronyme
      * 

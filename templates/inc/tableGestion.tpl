@@ -45,11 +45,11 @@
 
             <td style="padding:0">
 
-                    <button type="button" 
+                    <div class="postit"
                         class="btn btn-default btn-xs btn-block" 
                         data-dayofweek = "{$dataJournee.day.dayOfWeek}">
                             {$dataJournee.day.fr|substr:0:2}<br><span style="font-size:1.2em">{$dataJournee.day.fr|substr:4}</span>
-                    </button>
+                    </div>
                     <div class="btn-group-vertical btn-block">
                     <a href="#" 
                         class="btn btn-primary btn-xs btn-block btn-confirm" 
@@ -136,7 +136,7 @@
                                         data-html="true"
                                         data-title="Paramètres de contact"
                                         data-content="{$benevole.prenom} {$benevole.nom}<br>
-                                            <i class='fa fa-send'></i> {$benevole.mail}<br>
+                                            <i class='fa fa-send'></i> <a href='mailto:{$benevole.mail}'>{$benevole.mail}</a><br>
                                             <i class='fa fa-phone'></i> {$benevole.telephone}"
                                         data-container="body"
                                         data-acronyme="{$benevole.acronyme}"

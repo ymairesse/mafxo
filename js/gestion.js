@@ -38,8 +38,8 @@ $('body').on('click', '#btn-saveProfilAdmin', function(){
 // ordre de présentation des bénévoles
 $('body').on('click', '#btn-alphaNom', function(){
     var acronyme = $('#usersList a.selected').data('acronyme');
-    Cookies.set('triUsers', 'alphaNom', { sameSite: 'strict' });
-    $.post('inc/getUsersList.inc.php', {
+    Cookies.set('triUsers', 'alphaNom', { sameSite: 'strict' }, { expires: 30 } );
+    $.post('inc/getUsersList.inc.php', {    
         triUsers: 'alphaNom'
         }, function(resultat){
             $('#ulList').html(resultat);
@@ -71,6 +71,7 @@ function resetGestion(){
     // bouton "Inscription" et "Désinscription"
     $('#calendar-table').find('.desinscription').addClass('hidden');
     $('#calendar-table').find('.inscription').removeClass('hidden');
+    $('.btn-confirmePermanence').removeClass('btn-danger');
     $('#calendar-table .candidat').remove();
 }
 
@@ -283,14 +284,21 @@ $('body').on('click', '#btn-saveGestion', function(){
                     else month = month-1;
                 $('#year').val(year);
                 $('#month').val(month);
-        
+                Cookies.set('month', month, { sameSite: 'strict' }, { expires: 30 } );
+                Cookies.set('year', year, { sameSite: 'strict' }, { expires: 30 } );
                 $.post('inc/getGestion.inc.php', {
                     month: month,
                     year: year
                 }, function(resultat) {
                     $('#formGestion').html(resultat);
                     $('#usersList a.selected').trigger('click');
+                    // mise à jour du bouton PDF
+                    var href = $('#pdf-btn').prop('href');
+                    var posMonth = href.indexOf('month=') + 6;
+                    var newhref = href.substr(0, posMonth) + month + '&year=' + year;
+                    $('#pdf-btn').prop('href', newhref);
                 })
+
             }
     })
 
@@ -317,12 +325,19 @@ $('body').on('click', '#btn-saveGestion', function(){
         $('#year').val(year);
         $('#month').val(month);
 
+        Cookies.set('month', month, { sameSite: 'strict' }, { expires: 30 } );
+        Cookies.set('year', year, { sameSite: 'strict' }, { expires: 30 } );
         $.post('inc/getGestion.inc.php', {
             month: month,
             year: year
             }, function(resultat) {
                 $('#formGestion').html(resultat);
                 $('#usersList a.selected').trigger('click');
+                // mise à jour du bouton PDF
+                var href = $('#pdf-btn').prop('href');
+                var posMonth = href.indexOf('month=') + 6;
+                var newhref = href.substr(0, posMonth) + month + '&year=' + year;
+                $('#pdf-btn').prop('href', newhref);
         })
     }
     })
@@ -354,6 +369,7 @@ $('body').on('click', '#btn-saveGestion', function(){
     })
 
     $('body').on('click', '#btn-freeze', function(){
+        Cookies.set('action', 'freeze', { sameSite: 'strict' }, { expires: 30 } );
         $.post('inc/getFreezing.inc.php', {},
             function(resultat){
                 $('#modal').html(resultat);
@@ -430,6 +446,31 @@ $('body').on('click', '#btn-saveGestion', function(){
                 leBouton.find('.check').hide()
             }
         })
-        
+    })
 
+    $('body').on('click', '#btn-clean', function(){
+        $.post('inc/getCleaning.inc.php', {}, 
+            function(resultat){
+                $('#modal').html(resultat);
+                $('#modalCleaning').modal('show');
+            })
+    })
+
+    $('body').on('click', '#btn-modalClean', function(){
+        testSession();
+        var formulaire = $('#formClean').serialize();
+        $.post('inc/saveCleaning.inc.php', {
+            formulaire: formulaire
+        }, function(resultat){
+            bootbox.alert({
+                title: 'Suppression du calendrier mensuel',
+                message: '<strong>' + resultat + '</strong> permanences supprimées',
+                callback: function(){
+                    $('#btn-gestion').trigger('click');
+                    $('#modalCleaning').modal('hide');
+
+                }
+            });
+            
+        })
     })

@@ -47,8 +47,8 @@ $fmt2 = datefmt_create(
 
 $daysOfWeek = $Application->getDaysName();
 
-$year = isset($_POST['year']) ? $_POST['year'] : date('Y');
-$month = isset($_POST['month']) ? $_POST['month'] : date('n');
+$year = isset($_COOKIE['year']) ? $_COOKIE['year'] : date('Y');
+$month = isset($_COOKIE['month']) ? $_COOKIE['month'] : date('n');
 
 $nbJours = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 

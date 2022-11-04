@@ -18,13 +18,18 @@ $('body').on('click', '#btn-prevMonth', function(){
                 else month = month-1;
             $('#year').val(year);
             $('#month').val(month);
-            Cookies.set('month', month, { sameSite: 'strict' });
-            Cookies.set('year', year, { sameSite: 'strict' });
+            Cookies.set('month', month, { sameSite: 'strict' }, { expires: 30 } );
+            Cookies.set('year', year, { sameSite: 'strict' }, { expires: 30 } );
             $.post('inc/getCalendar.inc.php', {
                 month: month,
                 year: year
             }, function(resultat) {
                 $('#corpsPage').html(resultat);
+                // mise à jour du bouton PDF
+                var href = $('#pdf-btn').prop('href');
+                var posMonth = href.indexOf('month=') + 6;
+                var newhref = href.substr(0, posMonth) + month + '&year=' + year;
+                $('#pdf-btn').prop('href', newhref);
             })
         }
 })
@@ -49,13 +54,18 @@ $('body').on('click', '#btn-nextMonth', function(){
         else month = month+1;
     $('#year').val(year);
     $('#month').val(month);
-    Cookies.set('month', month, { sameSite: 'strict' });
-    Cookies.set('year', year, { sameSite: 'strict' });
+    Cookies.set('month', month, { sameSite: 'strict' }, { expires: 30 } );
+    Cookies.set('year', year, { sameSite: 'strict' }, { expires: 30 } );
     $.post('inc/getCalendar.inc.php', {
         month: month,
         year: year
         }, function(resultat) {
            $('#corpsPage').html(resultat);
+            // mise à jour du bouton PDF
+            var href = $('#pdf-btn').prop('href');
+            var posMonth = href.indexOf('month=') + 6;
+            var newhref = href.substr(0, posMonth) + month + '&year=' + year;
+            $('#pdf-btn').prop('href', newhref);
         })
     }
 })
@@ -219,6 +229,7 @@ $('body').on('click', '#btn-saveCalendar', function(){
         }
 
         if (freezeStatus == 1) {
+            // s'il y a quelque chose à recopier sur les autres jours
             if (ceci.closest('tr').find('input:checkbox').is(':checked'))
                 bootbox.alert({
                     title: title,

@@ -44,7 +44,7 @@
             <div class="btn-group-vertical btn-block">
 
                 <button type="button" 
-                    class="btn btn-success btn-xs" 
+                    class="btn btn-success btn-xs postit" 
                     data-dayofweek = "{$dataJournee.day.dayOfWeek}">
                         {$dataJournee.day.fr|substr:0:2}<br><span style="font-size:1.2em">{$dataJournee.day.fr|substr:4}</span>
                 </button>
@@ -119,12 +119,14 @@
 
                         <button 
                             type="button" 
-                            class="btn {if $unAcronyme == $acronyme}me btn-danger{else}btn-primary{/if} {if $calendar.$laDate.periodes.$periode.$unAcronyme.confirme == 1}confirmed{/if} btn-block" 
+                            class="btn {if $unAcronyme == $acronyme}me btn-danger{else}btn-primary{/if} 
+                                {if ($unAcronyme != $acronyme) && ($calendar.$laDate.periodes.$periode.$unAcronyme.confirme == 1)}confirmed{/if} 
+                                btn-block" 
                             data-toggle="popover"
                             data-html="true"
                             data-title="Paramètres de contact"
                             data-content="{$benevole.prenom} {$benevole.nom}<br>
-                                    <i class='fa fa-send'></i> {$benevole.mail}<br>
+                                    <i class='fa fa-send'></i> <a href='mailto:{$benevole.mail}'>{$benevole.mail}</a><br>
                                     <i class='fa fa-phone'></i> {$benevole.telephone|default:'---'}"
                             data-container="body"
                             data-acronyme="{$acronyme}"

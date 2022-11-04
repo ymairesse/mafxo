@@ -19,13 +19,6 @@ if ($User == null) {
 	exit;
 }
 
-
-require_once INSTALL_DIR."/smarty/Smarty.class.php";
-$smarty = new Smarty();
-$smarty->template_dir = "../templates";
-$smarty->compile_dir = "../templates_c";
-
-
 $fmt1 = datefmt_create(
     'fr_FR',
     IntlDateFormatter::FULL,
@@ -107,7 +100,7 @@ $smarty->assign('calendar', $calendar);
 $smarty->assign('listePeriodes', $listePeriodes);
 
 $ym = sprintf('%d-%02d', $year, $month);
-$freezeStatus = $Application->getFreezings4month(array($ym))[$ym];
+$freezeStatus = isset($Application->getFreezings4month(array($ym))[$ym]) ? $Application->getFreezings4month(array($ym))[$ym] : 0;
 $smarty->assign('freezeStatus', $freezeStatus);
 
 $smarty->assign('freezeStatus', $freezeStatus);

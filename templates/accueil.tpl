@@ -55,8 +55,8 @@
 			</div> <!-- panel-body -->
 
 			<div class="panel-footer">
-				<button type="button" id="btnMDP" class="btn btn-primary btn-xs">Mot de passe perdu</button>
-				<button type="button" id="btnNewUser" class="btn btn-danger btn-lg pull-right">M'inscrire</button>
+				<button type="button" id="btnNewUser" class="btn btn-danger btn-lg"><i class="fa fa-pencil"></i> M'inscrire</button>
+				<button type="button" id="btnMDP" class="btn btn-warning btn-sm pull-right">Mot de passe perdu</button>
 			</div>
 
 			<div class="clearfix"></div>

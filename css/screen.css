@@ -142,6 +142,11 @@ input[type='text'], input[type='passwd'], select, textarea {
     text-align:center;
 }
 
+button.confirmed {
+    background-color: white !important;
+    color: black !important;
+}
+
 .me {
     background-color: red !important;
 }
@@ -248,7 +253,8 @@ a.selected {
     padding: 1em 0;
 }
 
-button.confirmed {
-    background-color: white !important;
-    color: black !important;
+.postit {
+    font-size: 1.2em;
+    text-align: center;
+    font-weight: bold;
 }
