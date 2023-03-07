@@ -37,7 +37,7 @@ CREATE TABLE `ox_passwd` (
 --
 
 INSERT INTO `ox_passwd` (`acronyme`, `passwd`) VALUES
-('admadm', '25d55ad283aa400af464c76d713c07ad');
+('admadm', 'e10adc3949ba59abbe56e057f20f883e');
 --
 -- Index pour les tables déchargées
 --
