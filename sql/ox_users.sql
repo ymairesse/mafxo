@@ -42,7 +42,7 @@ CREATE TABLE `ox_users` (
 
 --
 -- Déchargement des données de la table `ox_users`
---
+--••••••
 
 INSERT INTO `ox_users` (`acronyme`, `nom`, `prenom`, `statut`, `mail`, `telephone`, `adresse`, `cpostal`, `commune`, `homonyme`) VALUES
 ('admadm', 'adm', 'adm', 'admin', 'nomail@sio2.be', '', '', '', '', 0);
